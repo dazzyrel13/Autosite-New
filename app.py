@@ -205,21 +205,18 @@ def create_app(config_class=Config):
                             cols = [description[0] for description in cursor.description]
                             current_app.logger.info(f"Internal Migration: Migrating {len(rows)} rows from {table_name}")
                             
-                            import json
                             for row in rows:
                                 data = dict(zip(cols, row))
                                 
                                 # 🛠️ Fix types for Postgres
                                 for k, v in data.items():
-                                    # Postgres needs True/False for Boolean columns, but SQLite gives 0/1
+                                    # 1. Convert 0/1 to True/False for Boolean fields (PG requirement)
                                     if k in ['is_currency_fixed', 'is_published']:
                                         if v is not None: data[k] = bool(v)
-                                    # SQLite stores JSON as strings, Postgres needs actual collections or JSON type
-                                    if k in ['specifications', 'images'] and isinstance(v, str):
-                                        try:
-                                            data[k] = json.loads(v)
-                                        except:
-                                            pass
+                                    # 2. JSON fields (images, specifications): 
+                                    # SQLite provides strings. If we convert them to list/dict, psycopg2 
+                                    # tries to insert as text[] (Postgres Array), failing the JSON match.
+                                    # We keep them as strings; Postgres/Alchemy will handle the JSON parse.
                                 
                                 from extensions import db as _db
                                 from sqlalchemy import text
