@@ -170,60 +170,65 @@ def create_app(config_class=Config):
         db.create_all()
 
         # 🚀 Internal Migration: SQLite (site.db) -> Postgres
-        def migrate_internal():
-            try:
-                from models import Vehicle
-                # Check if Postgres already has data
+        def migrate_internal(app_context):
+            with app_context:
                 try:
-                    first_vehicle = Vehicle.query.first()
-                    if first_vehicle:
-                        app.logger.info("Internal Migration: Data already exists in Postgres. Skipping.")
-                        return # Already migrated
-                except Exception as e:
-                    app.logger.error(f"Internal Migration check failed (maybe DB empty/error): {e}")
-                
-                sqlite_path = os.path.join(app.root_path, 'site.db')
-                if not os.path.exists(sqlite_path):
-                    app.logger.warning(f"Internal Migration: site.db not found at {sqlite_path}")
-                    return # No source file to migrate
-                
-                import sqlite3
-                conn = sqlite3.connect(sqlite_path)
-                cursor = conn.cursor()
-                
-                tables = ['vehicle', 'article', 'lead', 'review', 'inspection_report']
-                app.logger.info(f"Internal Migration: Starting migration for tables: {tables}")
-                
-                for table_name in tables:
+                    from models import Vehicle
+                    from flask import current_app
+                    # Check if Postgres already has data
                     try:
-                        cursor.execute(f"SELECT * FROM {table_name}")
-                        rows = cursor.fetchall()
-                        if not rows: continue
-                        
-                        cols = [description[0] for description in cursor.description]
-                        app.logger.info(f"Internal Migration: Migrating {len(rows)} rows from {table_name}")
-                        
-                        for row in rows:
-                            data = dict(zip(cols, row))
-                            from extensions import db as _db
-                            from sqlalchemy import text
-                            p_holders = ", ".join([f":{k}" for k in data.keys()])
-                            col_names = ", ".join(data.keys())
-                            _db.session.execute(text(f"INSERT INTO {table_name} ({col_names}) VALUES ({p_holders}) ON CONFLICT DO NOTHING"), data)
-                        _db.session.commit()
-                        app.logger.info(f"Internal Migration: {table_name} success!")
-                    except Exception as table_err:
-                        app.logger.error(f"Internal Migration: {table_name} failed: {table_err}")
-                conn.close()
-                app.logger.info("Internal Migration: Migration complete.")
-                from extensions import cache as _cache
-                _cache.clear()
-            except Exception as e:
-                app.logger.critical(f"Internal Migration error: {e}")
+                        first_vehicle = Vehicle.query.first()
+                        if first_vehicle:
+                            current_app.logger.info("Internal Migration: Data already exists in Postgres. Skipping.")
+                            return # Already migrated
+                    except Exception as e:
+                        current_app.logger.error(f"Internal Migration check failed (maybe DB empty/error): {e}")
+                    
+                    sqlite_path = os.path.join(current_app.root_path, 'site.db')
+                    if not os.path.exists(sqlite_path):
+                        current_app.logger.warning(f"Internal Migration: site.db not found at {sqlite_path}")
+                        return # No source file to migrate
+                    
+                    import sqlite3
+                    conn = sqlite3.connect(sqlite_path)
+                    cursor = conn.cursor()
+                    
+                    tables = ['vehicle', 'article', 'lead', 'review', 'inspection_report']
+                    current_app.logger.info(f"Internal Migration: Starting migration for tables: {tables}")
+                    
+                    for table_name in tables:
+                        try:
+                            cursor.execute(f"SELECT * FROM {table_name}")
+                            rows = cursor.fetchall()
+                            if not rows: continue
+                            
+                            cols = [description[0] for description in cursor.description]
+                            current_app.logger.info(f"Internal Migration: Migrating {len(rows)} rows from {table_name}")
+                            
+                            for row in rows:
+                                data = dict(zip(cols, row))
+                                from extensions import db as _db
+                                from sqlalchemy import text
+                                p_holders = ", ".join([f":{k}" for k in data.keys()])
+                                col_names = ", ".join(data.keys())
+                                _db.session.execute(text(f"INSERT INTO {table_name} ({col_names}) VALUES ({p_holders}) ON CONFLICT DO NOTHING"), data)
+                            _db.session.commit()
+                            current_app.logger.info(f"Internal Migration: {table_name} success!")
+                        except Exception as table_err:
+                            current_app.logger.error(f"Internal Migration: {table_name} failed: {table_err}")
+                    conn.close()
+                    current_app.logger.info("Internal Migration: Migration complete.")
+                    from extensions import cache as _cache
+                    _cache.clear()
+                except Exception as e:
+                    try:
+                        current_app.logger.critical(f"Internal Migration error: {e}")
+                    except:
+                        print(f"Migration CRITICAL error (no context): {e}")
 
-        # Start background migration
+        # Start background migration with proper app context
         from threading import Thread
-        Thread(target=migrate_internal).start()
+        Thread(target=migrate_internal, args=(app.app_context(),)).start()
 
 
         from routes.main import register_routes
