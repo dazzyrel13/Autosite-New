@@ -174,11 +174,17 @@ def create_app(config_class=Config):
             try:
                 from models import Vehicle
                 # Check if Postgres already has data
-                if Vehicle.query.first():
-                    return # Already migrated
+                try:
+                    first_vehicle = Vehicle.query.first()
+                    if first_vehicle:
+                        app.logger.info("Internal Migration: Data already exists in Postgres. Skipping.")
+                        return # Already migrated
+                except Exception as e:
+                    app.logger.error(f"Internal Migration check failed (maybe DB empty/error): {e}")
                 
                 sqlite_path = os.path.join(app.root_path, 'site.db')
                 if not os.path.exists(sqlite_path):
+                    app.logger.warning(f"Internal Migration: site.db not found at {sqlite_path}")
                     return # No source file to migrate
                 
                 import sqlite3
@@ -186,30 +192,34 @@ def create_app(config_class=Config):
                 cursor = conn.cursor()
                 
                 tables = ['vehicle', 'article', 'lead', 'review', 'inspection_report']
-                for table in tables:
+                app.logger.info(f"Internal Migration: Starting migration for tables: {tables}")
+                
+                for table_name in tables:
                     try:
-                        cursor.execute(f"SELECT * FROM {table}")
+                        cursor.execute(f"SELECT * FROM {table_name}")
                         rows = cursor.fetchall()
                         if not rows: continue
                         
                         cols = [description[0] for description in cursor.description]
+                        app.logger.info(f"Internal Migration: Migrating {len(rows)} rows from {table_name}")
+                        
                         for row in rows:
-                            # Map row to SQLAlchemy model
-                            # This is a basic generic approach for speed
                             data = dict(zip(cols, row))
-                            # Add to PG
-                            from extensions import db
+                            from extensions import db as _db
                             from sqlalchemy import text
-                            placeholders = ", ".join([f":{k}" for k in data.keys()])
-                            names = ", ".join(data.keys())
-                            db.session.execute(text(f"INSERT INTO {table} ({names}) VALUES ({placeholders}) ON CONFLICT DO NOTHING"), data)
-                        db.session.commit()
-                        print(f"Internal Migration: {table} success!")
-                    except Exception as e:
-                        print(f"Skipping table {table}: {e}")
+                            p_holders = ", ".join([f":{k}" for k in data.keys()])
+                            col_names = ", ".join(data.keys())
+                            _db.session.execute(text(f"INSERT INTO {table_name} ({col_names}) VALUES ({p_holders}) ON CONFLICT DO NOTHING"), data)
+                        _db.session.commit()
+                        app.logger.info(f"Internal Migration: {table_name} success!")
+                    except Exception as table_err:
+                        app.logger.error(f"Internal Migration: {table_name} failed: {table_err}")
                 conn.close()
+                app.logger.info("Internal Migration: Migration complete.")
+                from extensions import cache as _cache
+                _cache.clear()
             except Exception as e:
-                print(f"Migration error: {e}")
+                app.logger.critical(f"Internal Migration error: {e}")
 
         # Start background migration
         from threading import Thread
