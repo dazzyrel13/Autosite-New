@@ -7,9 +7,10 @@ class Config:
     SECRET_KEY = os.getenv('SECRET_KEY')
     if not SECRET_KEY:
         raise RuntimeError("CRITICAL ERROR: SECRET_KEY NOT SET IN .ENV! Application cannot start without it.")
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') or \
-        'sqlite:///' + os.path.join(os.path.abspath(os.path.dirname(__file__)), 'site.db')
+    # Принудительно используем site.db (локальную базу с машинами)
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(os.path.abspath(os.path.dirname(__file__)), 'site.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
 
     
     # 💥 DOS Defense (16 MB limit max per request)
