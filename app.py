@@ -205,8 +205,22 @@ def create_app(config_class=Config):
                             cols = [description[0] for description in cursor.description]
                             current_app.logger.info(f"Internal Migration: Migrating {len(rows)} rows from {table_name}")
                             
+                            import json
                             for row in rows:
                                 data = dict(zip(cols, row))
+                                
+                                # 🛠️ Fix types for Postgres
+                                for k, v in data.items():
+                                    # Postgres needs True/False for Boolean columns, but SQLite gives 0/1
+                                    if k in ['is_currency_fixed', 'is_published']:
+                                        if v is not None: data[k] = bool(v)
+                                    # SQLite stores JSON as strings, Postgres needs actual collections or JSON type
+                                    if k in ['specifications', 'images'] and isinstance(v, str):
+                                        try:
+                                            data[k] = json.loads(v)
+                                        except:
+                                            pass
+                                
                                 from extensions import db as _db
                                 from sqlalchemy import text
                                 p_holders = ", ".join([f":{k}" for k in data.keys()])
@@ -215,6 +229,8 @@ def create_app(config_class=Config):
                             _db.session.commit()
                             current_app.logger.info(f"Internal Migration: {table_name} success!")
                         except Exception as table_err:
+                            from extensions import db as _db
+                            _db.session.rollback() # Clear failed transaction in Postgres
                             current_app.logger.error(f"Internal Migration: {table_name} failed: {table_err}")
                     conn.close()
                     current_app.logger.info("Internal Migration: Migration complete.")
