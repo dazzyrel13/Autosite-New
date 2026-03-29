@@ -165,6 +165,10 @@ def create_app(config_class=Config):
 
     # Регистрация маршрутов
     with app.app_context():
+        # Auto-create the database file and schema
+        os.makedirs(app.instance_path, exist_ok=True)
+        db.create_all()
+
         from routes.main import register_routes
         from routes.auth import register_auth_routes
         register_routes(app)
