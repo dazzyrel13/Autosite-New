@@ -169,6 +169,53 @@ def create_app(config_class=Config):
         os.makedirs(app.instance_path, exist_ok=True)
         db.create_all()
 
+        # 🚀 Internal Migration: SQLite (site.db) -> Postgres
+        def migrate_internal():
+            try:
+                from models import Vehicle
+                # Check if Postgres already has data
+                if Vehicle.query.first():
+                    return # Already migrated
+                
+                sqlite_path = os.path.join(app.root_path, 'site.db')
+                if not os.path.exists(sqlite_path):
+                    return # No source file to migrate
+                
+                import sqlite3
+                conn = sqlite3.connect(sqlite_path)
+                cursor = conn.cursor()
+                
+                tables = ['vehicle', 'article', 'lead', 'review', 'inspection_report']
+                for table in tables:
+                    try:
+                        cursor.execute(f"SELECT * FROM {table}")
+                        rows = cursor.fetchall()
+                        if not rows: continue
+                        
+                        cols = [description[0] for description in cursor.description]
+                        for row in rows:
+                            # Map row to SQLAlchemy model
+                            # This is a basic generic approach for speed
+                            data = dict(zip(cols, row))
+                            # Add to PG
+                            from extensions import db
+                            from sqlalchemy import text
+                            placeholders = ", ".join([f":{k}" for k in data.keys()])
+                            names = ", ".join(data.keys())
+                            db.session.execute(text(f"INSERT INTO {table} ({names}) VALUES ({placeholders}) ON CONFLICT DO NOTHING"), data)
+                        db.session.commit()
+                        print(f"Internal Migration: {table} success!")
+                    except Exception as e:
+                        print(f"Skipping table {table}: {e}")
+                conn.close()
+            except Exception as e:
+                print(f"Migration error: {e}")
+
+        # Start background migration
+        from threading import Thread
+        Thread(target=migrate_internal).start()
+
+
         from routes.main import register_routes
         from routes.auth import register_auth_routes
         register_routes(app)
