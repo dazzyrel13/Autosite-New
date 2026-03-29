@@ -230,6 +230,17 @@ def create_app(config_class=Config):
                             _db.session.rollback() # Clear failed transaction in Postgres
                             current_app.logger.error(f"Internal Migration: {table_name} failed: {table_err}")
                     conn.close()
+                    
+                    # 🛠️ Fix Postgres ID Sequences (prevents 'Key already exists' error after migration)
+                    from sqlalchemy import text
+                    for table in tables:
+                        try:
+                            _db.session.execute(text(f"SELECT setval('{table}_id_seq', COALESCE((SELECT MAX(id) FROM {table}), 1))"))
+                            _db.session.commit()
+                        except Exception as seq_err:
+                            _db.session.rollback()
+                            current_app.logger.warning(f"Could not sync sequence for {table}: {seq_err}")
+                            
                     current_app.logger.info("Internal Migration: Migration complete.")
                     from extensions import cache as _cache
                     _cache.clear()
