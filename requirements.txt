@@ -18,3 +18,4 @@ cachelib==0.13.0
 Pillow>=10.0.0
 flask-admin>=1.6.0
 redis>=5.0.0
+gunicorn==21.2.0
