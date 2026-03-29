@@ -527,51 +527,56 @@ def register_routes(app):
             return "⛔ Ошибка доступа. Неверный ключ или не выполнен вход.", 403
             
         if request.method == 'POST':
-            import os, uuid
-            from werkzeug.utils import secure_filename
-            from models import InspectionReport
-            
-            model_name = request.form.get('model')
-            year = request.form.get('year')
-            horsepower = request.form.get('horsepower')
-            mileage = request.form.get('mileage')
-            price = request.form.get('price')
-            desc = request.form.get('desc')
-            
-            report_uid = f'TDV-{uuid.uuid4().hex[:6].upper()}'
-            target_dir = os.path.join(app.root_path, 'static', 'reports', report_uid)
-            os.makedirs(target_dir, exist_ok=True)
-            
-            saved_images = []
-            files = request.files.getlist('photos')
-            from PIL import Image, ImageOps
-            for idx, file in enumerate(files):
-                if file and file.filename:
-                    filename = f'{idx}.webp'
-                    path = os.path.join(target_dir, filename)
-                    try:
-                        img = Image.open(file)
-                        img = ImageOps.exif_transpose(img)
-                        img = img.convert('RGB')
-                        img.save(path, 'WEBP', quality=95)
-                        saved_images.append(f'reports/{report_uid}/{filename}')
-                    except Exception as e:
-                        logger.error(f'Error saving image: {e}')
-            
-            report = InspectionReport(
-                report_uid=report_uid,
-                model_name=model_name,
-                year=int(year) if year else None,
-                horsepower=int(horsepower) if horsepower else None,
-                mileage=int(mileage) if mileage else None,
-                price_cny=int(price) if price else None,
-                description=desc,
-                images=saved_images
-            )
-            db.session.add(report)
-            db.session.commit()
-            
-            return jsonify({'success': True, 'url': url_for('view_report', uid=report_uid)})
+            try:
+                import os, uuid
+                from werkzeug.utils import secure_filename
+                from models import InspectionReport
+                
+                model_name = request.form.get('model')
+                year = request.form.get('year')
+                horsepower = request.form.get('horsepower')
+                mileage = request.form.get('mileage')
+                price = request.form.get('price')
+                desc = request.form.get('desc')
+                
+                report_uid = f'TDV-{uuid.uuid4().hex[:6].upper()}'
+                target_dir = os.path.join(app.root_path, 'static', 'reports', report_uid)
+                os.makedirs(target_dir, exist_ok=True)
+                
+                saved_images = []
+                files = request.files.getlist('photos')
+                from PIL import Image, ImageOps
+                for idx, file in enumerate(files):
+                    if file and file.filename:
+                        filename = f'{idx}.webp'
+                        path = os.path.join(target_dir, filename)
+                        try:
+                            img = Image.open(file)
+                            img = ImageOps.exif_transpose(img)
+                            img = img.convert('RGB')
+                            img.save(path, 'WEBP', quality=95)
+                            saved_images.append(f'reports/{report_uid}/{filename}')
+                        except Exception as e:
+                            logger.error(f'Error saving image: {e}')
+                
+                report = InspectionReport(
+                    report_uid=report_uid,
+                    model_name=model_name,
+                    year=int(year) if year else None,
+                    horsepower=int(horsepower) if horsepower else None,
+                    mileage=int(mileage) if mileage else None,
+                    price_cny=int(price) if price else None,
+                    description=desc,
+                    images=saved_images
+                )
+                db.session.add(report)
+                db.session.commit()
+                
+                return jsonify({'success': True, 'url': url_for('view_report', uid=report_uid)})
+            except Exception as e:
+                db.session.rollback()
+                logger.error(f"Dealer Report creation error: {e}")
+                return jsonify({'success': False, 'error': f"Ошибка сервера: {str(e)}"}), 500
             
         return render_template('dealer_report.html', token=token)
 
