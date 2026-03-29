@@ -29,12 +29,13 @@ COPY requirements.txt .
 # Установка Python-зависимостей
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем все файлы проекта в контейнер
+# Copy the database and all project files
+# We ensure site.db is included
 COPY . .
 
-# Открываем порт 5000 (стандартный для Flask)
+# Expose the Flask port
 EXPOSE 5000
 
-# Команда запуска приложения (через Gunicorn для продакшена)
-# Если gunicorn не в реквайрментах, доставим или используем flask run
+# Start command
 CMD ["python", "app.py"]
+
