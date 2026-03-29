@@ -175,11 +175,24 @@ def create_app(config_class=Config):
                 try:
                     from models import Vehicle
                     from flask import current_app
+                    # 🛠️ Step 0: Sync Sequences regardless of migration status
+                    # This fixes 'Duplicate Key' errors if data was already in the DB but counters were wrong.
+                    tables = ['vehicle', 'article', 'lead', 'review', 'inspection_report']
+                    from sqlalchemy import text
+                    from extensions import db as _db
+                    for table in tables:
+                        try:
+                            _db.session.execute(text(f"SELECT setval('{table}_id_seq', COALESCE((SELECT MAX(id) FROM {table}), 0), true)"))
+                            _db.session.commit()
+                        except Exception as seq_err:
+                            _db.session.rollback()
+                            current_app.logger.warning(f"Seq sync failed for {table}: {seq_err}")
+
                     # Check if Postgres already has data
                     try:
                         first_vehicle = Vehicle.query.first()
                         if first_vehicle:
-                            current_app.logger.info("Internal Migration: Data already exists in Postgres. Skipping.")
+                            current_app.logger.info("Internal Migration: Data exists. Sequences synced, migration skipped.")
                             return # Already migrated
                     except Exception as e:
                         current_app.logger.error(f"Internal Migration check failed (maybe DB empty/error): {e}")
