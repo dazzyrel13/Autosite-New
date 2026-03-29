@@ -1,0 +1,259 @@
+{% extends 'admin/base.html' %}
+
+{% block head_meta %}
+{{ super() }}
+<meta name="csrf-token" content="{{ csrf_token() }}">
+{% endblock %}
+
+{% block head_tail %}
+{{ super() }}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<style>
+    :root {
+        --primary: #E60000;
+        --secondary: #1A1A1A;
+        --bg-dark: #0A0A0A;
+        --bg-light: #F5F5F5;
+        --bg-offset: #121212;
+        --text-light: #FFFFFF;
+        --text-dark: #333333;
+        --text-muted: #888888;
+        --accent: #FF1E1E;
+    }
+
+    body {
+        background-color: var(--bg-dark) !important;
+        color: var(--text-light) !important;
+    }
+
+    /* Ссылки Глобально */
+    a {
+        color: var(--text-light) !important;
+        text-decoration: none !important;
+        transition: all 0.2s ease;
+    }
+
+    a:hover {
+        color: var(--accent) !important;
+    }
+
+    /* Навигация (Navbar) */
+    .navbar.navbar-dark.bg-dark {
+        background-color: var(--bg-offset) !important;
+        border-bottom: 2px solid var(--accent) !important;
+    }
+
+    .navbar-dark .navbar-brand {
+        color: #fff !important;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+
+    .navbar-dark .navbar-nav .nav-link {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    .navbar-dark .navbar-nav .nav-link:hover {
+        color: #fff !important;
+    }
+
+    /* Активная вкладка меню */
+    .navbar-dark .navbar-nav .active>.nav-link {
+        color: var(--accent) !important;
+        font-weight: bold;
+    }
+
+    /* Табы (Список / Создать) */
+    .nav-tabs {
+        border-bottom: 2px solid var(--secondary) !important;
+        margin-bottom: 20px;
+    }
+
+    .nav-tabs .nav-link {
+        border: none !important;
+        background: transparent !important;
+        color: var(--text-muted) !important;
+        padding: 10px 25px !important;
+        font-weight: 600;
+    }
+
+    .nav-tabs .nav-link.active {
+        color: #fff !important;
+        background: var(--accent) !important;
+        border-radius: 4px 4px 0 0 !important;
+    }
+
+    /* Карточки */
+    .card {
+        background-color: var(--secondary) !important;
+        color: var(--text-light) !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* Таблицы */
+    .table {
+        color: var(--text-light) !important;
+        border-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(255, 255, 255, 0.02) !important;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        color: #fff !important;
+    }
+
+    .table thead th {
+        background-color: var(--bg-offset) !important;
+        border-bottom: 2px solid var(--accent) !important;
+        color: #fff !important;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+    }
+
+    .table thead th a {
+        color: #fff !important;
+        font-weight: bold !important;
+    }
+
+    /* Модальные окна */
+    .modal-content {
+        background-color: var(--secondary) !important;
+        color: var(--text-light) !important;
+    }
+
+    .modal-header {
+        border-bottom: 1px solid var(--accent) !important;
+    }
+
+    /* Кнопки */
+    .btn-default,
+    .btn-secondary {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        color: #fff !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .btn-default:hover,
+    .btn-secondary:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        border-color: var(--accent) !important;
+    }
+
+    .btn-primary {
+        background-color: var(--accent) !important;
+        border-color: var(--accent) !important;
+        font-weight: bold;
+    }
+
+    .btn-xs {
+        padding: 1px 12px !important;
+        font-size: 13px !important;
+        border-radius: 4px !important;
+    }
+
+    /* Формы и Поиск */
+    .form-control {
+        background-color: var(--bg-offset) !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+        color: #fff !important;
+    }
+
+    .form-control:focus {
+        border-color: var(--accent) !important;
+        box-shadow: 0 0 0 0.2rem rgba(230, 0, 0, 0.25) !important;
+    }
+
+    /* Иконки */
+    .fas,
+    .fa,
+    .bi {
+        display: inline-block !important;
+    }
+
+    /* Хлебные крошки */
+    .breadcrumb {
+        background-color: transparent !important;
+        padding-left: 0;
+    }
+
+    .breadcrumb-item.active {
+        color: var(--text-muted) !important;
+    }
+
+    .admin-container {
+        padding: 30px 20px;
+    }
+
+    /* Исправление выпадающих списков (Белое на белом) */
+    .dropdown-menu {
+        background-color: var(--secondary) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+        padding: 5px !important;
+    }
+
+    .dropdown-item {
+        color: #fff !important;
+        padding: 8px 20px !important;
+        border-radius: 4px !important;
+    }
+
+    .dropdown-item:hover {
+        background-color: var(--accent) !important;
+        color: #fff !important;
+    }
+
+    /* 🔥 ТОТАЛЬНАЯ ВИДИМОСТЬ ДЛЯ ВСЕХ ИКОНОК И КНОПОК 🔥 */
+    .table td:nth-child(2) * {
+        color: #fff !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: inline-block !important;
+    }
+
+    /* Все иконки по всему проекту (Карандаши, корзины и т.д.) */
+    .fa,
+    .fas,
+    .far,
+    .fab,
+    .bi,
+    .glyphicon,
+    [class*="fa-"],
+    [class*="bi-"],
+    [class*="glyphicon-"] {
+        color: #fff !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    /* Индивидуальная подсветка при наведении */
+    .table td a:hover i,
+    .table td a:hover span,
+    .table td:nth-child(2) a:hover {
+        color: var(--accent) !important;
+        transform: scale(1.1);
+    }
+
+    /* Ссылки быстрого редактирования */
+    .table a.x-editable {
+        color: #fff !important;
+        border-bottom: 2px dashed var(--accent) !important;
+        text-decoration: none !important;
+    }
+
+    .table a.x-editable:hover {
+        color: var(--accent) !important;
+    }
+
+    .table td:nth-child(2) i,
+    .table td:nth-child(2) a {
+        margin-right: 12px !important;
+    }
+</style>
+{% endblock %}

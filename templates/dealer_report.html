@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-RU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Создание отчета об автомобиле</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; 
+            padding: 15px; background: #1a1e23; color: #fff; margin: 0; min-height: 100vh;
+        }
+        .container { max-width: 650px; margin: 0 auto; background: #22272e; padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        h2 { text-align: center; color: #e74c3c; margin: 0 0 25px 0; }
+        
+        .form-group { margin-bottom: 16px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; }
+        .label-cn { color: #fff; }
+        .label-ru { color: #95a5a6; font-weight: normal; font-size: 13px; margin-left: 6px; }
+        .required { color: #e74c3c; }
+        
+        input, textarea { width: 100%; padding: 12px; background: #1c2128; border: 1px solid #444c56; color: #fff; border-radius: 6px; font-size: 16px; transition: 0.3s; }
+        input:focus, textarea:focus { border-color: #3498db; outline: none; box-shadow: 0 0 0 3px rgba(52,152,219,0.2); }
+        textarea { min-height: 80px; resize: vertical; }
+        .row { display: flex; gap: 12px; }
+        .row .form-group { flex: 1; }
+        
+        #image-preview { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; min-height: 40px; background: #1c2128; padding: 12px; border-radius: 6px; border: 1px dashed #444; }
+        .preview-wrapper { position: relative; width: 100px; height: 100px; }
+        .preview-img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 2px solid #2d333b; }
+        .del-btn { 
+            position: absolute; top: -8px; right: -8px; width: 24px; height: 24px; 
+            background: #e74c3c; color: white; border-radius: 50%; border: 2px solid #22272e;
+            display: flex; align-items: center; justify-content: center; font-size: 14px; 
+            font-weight: bold; cursor: pointer; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .file-input-wrapper { position: relative; width: 100%; }
+        .file-input-btn { display: block; padding: 15px; background: #e74c3c; color: white; text-align: center; border-radius: 8px; cursor: pointer; border: none; font-weight: bold; font-size: 16px; }
+        #photos { position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+        
+        button { width: 100%; padding: 15px; background: #3498db; color: white; border: none; border-radius: 8px; font-size: 17px; font-weight: 600; cursor: pointer; margin-top: 15px; transition: 0.3s; }
+        button:disabled { background: #555; cursor: not-allowed; }
+        button:hover:not(:disabled) { background: #2980b9; }
+        
+        #loading { display: none; text-align: center; padding: 15px; background: rgba(52,152,219,0.1); border-radius: 8px; margin-top: 15px; color: #3498db; }
+        .hint { font-size: 12px; color: #7f8c8d; margin-top: 5px; }
+        
+        #result-box { display: none; text-align: center; margin-top: 20px; padding: 20px; background: rgba(46, 204, 113, 0.1); border: 1px solid #2ecc71; border-radius: 8px; }
+        #result-link { display: inline-block; margin-top: 10px; padding: 10px 15px; background: #2ecc71; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold; word-break: break-all; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🚗 车辆信息登记<br><small style="font-size:14px;color:#95a5a6;font-weight:normal">Генератор отчетов (Original Quality)</small></h2>
+    
+    <form id="report-form">
+        <input type="hidden" name="token" value="{{ token or '' }}">
+        <div class="form-group">
+            <label><span class="label-cn">品牌/型号</span><span class="label-ru">| Марка/Модель</span><span class="required">*</span></label>
+            <input type="text" name="model" required placeholder="Toyota Camry">
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label><span class="label-cn">上牌年份</span><span class="label-ru">| Год</span><span class="required">*</span></label>
+                <input type="number" name="year" required placeholder="2020">
+            </div>
+            <div class="form-group">
+                <label><span class="label-cn">马力</span><span class="label-ru">| Л.с.</span></label>
+                <input type="number" name="horsepower" placeholder="203">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label><span class="label-cn">里程</span><span class="label-ru">| Пробег (км)</span><span class="required">*</span></label>
+                <input type="number" name="mileage" required placeholder="45000">
+            </div>
+            <div class="form-group">
+                <label><span class="label-cn">价格</span><span class="label-ru">| Цена (¥)</span><span class="required">*</span></label>
+                <input type="number" name="price" required placeholder="125000">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label><span class="label-cn">配置描述</span><span class="label-ru">| Описание</span></label>
+            <textarea name="desc" placeholder="全景天窗，真皮座椅... Описание авто"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label><span class="label-cn">车辆照片</span><span class="label-ru">| Фото (Без сжатия)</span><span class="required">*</span></label>
+            <div class="file-input-wrapper">
+                <div class="file-input-btn">📷 Выбрать фото (До 10 шт)</div>
+                <input type="file" id="photos" multiple accept="image/*">
+            </div>
+            <div class="hint">📸 Нажмите на ❌ на фото, чтобы удалить его из списка.</div>
+            <div id="image-preview"></div>
+        </div>
+
+        <button type="submit" id="btn-submit">🚀 Сгенерировать ссылку</button>
+        <div id="loading">⏳ Идет загрузка фото на сервер... Пожалуйста, подождите.</div>
+    </form>
+    
+    <div id="result-box">
+        <h3 style="color: #2ecc71; margin-top: 0;">✅ Отчет готов!</h3>
+        <p>Ссылка создана:</p>
+        <a href="#" id="result-link" target="_blank">Открыть отчет</a>
+    </div>
+</div>
+
+<script>
+    let selectedFiles = [];
+    const photoInput = document.getElementById('photos');
+    const preview = document.getElementById('image-preview');
+    const form = document.getElementById('report-form');
+    const btn = document.getElementById('btn-submit');
+    const loading = document.getElementById('loading');
+    const resultBox = document.getElementById('result-box');
+    const resultLink = document.getElementById('result-link');
+
+    photoInput.addEventListener('change', function() {
+        const files = Array.from(this.files);
+        
+        if (selectedFiles.length + files.length > 10) {
+            alert('Максимум 10 фотографий!');
+            return;
+        }
+
+        files.forEach(file => {
+            selectedFiles.push(file);
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'preview-wrapper';
+                wrapper.dataset.index = selectedFiles.length - 1;
+                
+                wrapper.innerHTML = `
+                    <img src="${e.target.result}" class="preview-img">
+                    <div class="del-btn" onclick="removePhoto(this)">×</div>
+                `;
+                preview.appendChild(wrapper);
+            }
+            reader.readAsDataURL(file);
+        });
+        this.value = ''; // Reset input to allow re-selection
+    });
+
+    window.removePhoto = function(el) {
+        const wrapper = el.parentElement;
+        const index = parseInt(wrapper.dataset.index);
+        selectedFiles.splice(index, 1);
+        
+        // Redraw preview to fix indices
+        renderPreview();
+    };
+
+    function renderPreview() {
+        preview.innerHTML = '';
+        selectedFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'preview-wrapper';
+                wrapper.dataset.index = index;
+                wrapper.innerHTML = `
+                    <img src="${e.target.result}" class="preview-img">
+                    <div class="del-btn" onclick="removePhoto(this)">×</div>
+                `;
+                preview.appendChild(wrapper);
+            }
+            reader.readAsDataURL(file);
+        });
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        if (selectedFiles.length === 0) {
+            alert('Сначала добавьте фото!');
+            return;
+        }
+
+        const formData = new FormData(form);
+        // Remove the default photos entry and add our selected files
+        formData.delete('photos');
+        selectedFiles.forEach(file => {
+            formData.append('photos', file);
+        });
+        
+        btn.disabled = true;
+        btn.style.display = 'none';
+        loading.style.display = 'block';
+        resultBox.style.display = 'none';
+
+        try {
+            const response = await fetch('{{ url_for("dealer_report_create") }}', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+                form.reset();
+                selectedFiles = [];
+                preview.innerHTML = '';
+                resultLink.href = data.url;
+                resultLink.textContent = window.location.origin + data.url;
+                resultBox.style.display = 'block';
+                resultBox.scrollIntoView({behavior: 'smooth'});
+            } else {
+                alert('Ошибка: ' + (data.error || 'Не удалось создать отчет'));
+                btn.style.display = 'block';
+                btn.disabled = false;
+            }
+        } catch (err) {
+            alert('Ошибка сети: ' + err.message);
+            btn.style.display = 'block';
+            btn.disabled = false;
+        } finally {
+            loading.style.display = 'none';
+        }
+    });
+</script>
+</body>
+</html>

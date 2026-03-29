@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Лизинг и Кредит — Турбо-ДВ{% endblock %}
+
+{% block content %}
+<div class="fluid-overlay"></div>
+<section class="py-5" style="background: transparent; padding-top: 160px !important;">
+    <div class="container py-5">
+        <div class="row align-items-center mb-5" data-aos="fade-up">
+            <div class="col-lg-7">
+                <span class="text-accent fw-bold text-uppercase small" style="letter-spacing: 2px;">Финансовые
+                    решения</span>
+                <h1 class="display-4 fw-bold text-white mt-1 mb-4">Развивайте бизнес <br><span class="text-accent">без
+                        лишних затрат</span></h1>
+                <p class="text-white opacity-75 fs-5 mb-5">Мы предлагаем гибкие условия финансирования для
+                    приобретения техники из Китая. Работаем с ведущими банками и лизинговыми компаниями.</p>
+
+                <div class="row g-4 mt-4">
+                    <div class="col-md-6" data-aos="fade-right">
+                        <div class="bg-card p-4 rounded-4 border border-secondary border-opacity-10 h-100">
+                            <i class="bi bi-briefcase text-accent fs-1 mb-3 d-block"></i>
+                            <h4 class="text-white">Лизинг для бизнеса</h4>
+                            <p class="text-white opacity-75 small">Аванс от 5%, срок до 5 лет. Учет НДС и
+                                налога на прибыль.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6" data-aos="fade-left">
+                        <div class="bg-card p-4 rounded-4 border border-secondary border-opacity-10 h-100">
+                            <i class="bi bi-person-check text-accent fs-1 mb-3 d-block"></i>
+                            <h4 class="text-white">Автокредит</h4>
+                            <p class="text-white opacity-75 small">Для физлиц по двум документам. Решение за
+                                30 минут.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 text-center d-none d-lg-block">
+                <div class="bg-accent-soft p-5 rounded-circle shadow-lg d-inline-block">
+                    <i class="bi bi-cash-stack text-accent" style="font-size: 8rem;"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Calculator -->
+        <div class="mt-5 p-5 bg-card rounded-5 shadow-lg border border-secondary border-opacity-10" data-aos="fade-up">
+            <div class="row align-items-center">
+                <div class="col-lg-5">
+                    <h3 class="text-white mb-4">Калькулятор лизинга</h3>
+                    <p class="text-white opacity-75 small mb-5">Рассчитайте предварительный ежемесячный платеж. Точные
+                        условия зависят от выбранной финансовой программы.</p>
+
+                    <div class="mb-4">
+                        <label class="form-label text-white-50 small">Стоимость техники (₽)</label>
+                        <input type="range" class="form-range" id="priceRange" min="1000000" max="50000000"
+                            step="100000" value="5000000">
+                        <div class="d-flex justify-content-between text-white fw-bold">
+                            <span id="priceVal">5 000 000</span><span>₽</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label text-white-50 small">Аванс (%)</label>
+                        <input type="range" class="form-range" id="prepayRange" min="10" max="50" step="5" value="20">
+                        <div class="d-flex justify-content-between text-white fw-bold">
+                            <span id="prepayVal">20</span><span>%</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-0">
+                        <label class="form-label text-white-50 small">Срок (мес.)</label>
+                        <input type="range" class="form-range" id="termRange" min="12" max="60" step="12" value="36">
+                        <div class="d-flex justify-content-between text-white fw-bold">
+                            <span id="termVal">36</span><span>мес.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 offset-lg-1 mt-5 mt-lg-0">
+                    <div class="p-5 bg-accent-soft rounded-5 text-center border border-accent border-opacity-25">
+                        <div class="text-white-50 small text-uppercase fw-bold mb-2">Ежемесячный платеж</div>
+                        <div class="display-3 fw-bold text-accent mb-3" id="monthlyResult">121 450 ₽</div>
+                        <div class="text-white opacity-50 small">При ставке лизинга от 10.5% годовых</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function updateCalc() {
+                const price = parseInt(document.getElementById('priceRange').value);
+                const prepayPct = parseInt(document.getElementById('prepayRange').value);
+                const term = parseInt(document.getElementById('termRange').value);
+                const rate = 0.105 / 12; // 10.5% annual
+
+                document.getElementById('priceVal').innerText = price.toLocaleString('ru-RU');
+                document.getElementById('prepayVal').innerText = prepayPct;
+                document.getElementById('termVal').innerText = term;
+
+                const loanAmount = price * (1 - prepayPct / 100);
+                const monthly = (loanAmount * rate * Math.pow(1 + rate, term)) / (Math.pow(1 + rate, term) - 1);
+
+                document.getElementById('monthlyResult').innerText = Math.round(monthly).toLocaleString('ru-RU') + ' ₽';
+            }
+
+            ['priceRange', 'prepayRange', 'termRange'].forEach(id => {
+                document.getElementById(id).addEventListener('input', updateCalc);
+            });
+            updateCalc();
+        </script>
+
+        <div class="mt-5 p-5 bg-card rounded-5 text-center shadow-lg border border-accent border-opacity-10"
+            data-aos="zoom-in">
+            <h3 class="text-white mb-4">Хотите рассчитать платеж?</h3>
+            <p class="text-white opacity-75 mb-5 mx-auto" style="max-width: 600px;">Оставьте заявку, и наш финансовый
+                эксперт свяжется с вами для консультации по условиям.</p>
+            <a href="{{ url_for('contact') }}" class="btn btn-primary-custom px-5 py-3">Рассчитать условия</a>
+        </div>
+    </div>
+</section>
+
+<style>
+    .bg-card {
+        background-color: var(--bg-offset);
+    }
+
+    .text-accent {
+        color: var(--accent);
+    }
+</style>
+{% endblock %}

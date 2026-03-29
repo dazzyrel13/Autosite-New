@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}Отчет об осмотре машины: {{ report.model_name }} | Турбо-ДВ{% endblock %}
+{% block meta_description %}Официальный отчет Турбо ДВ об автомобиле {{ report.model_name }}. Пробег: {{ report.mileage }} км. Оригинальные фото без сжатия.{% endblock %}
+
+{% block content %}
+<section class="py-5" style="margin-top: 80px; background: #0b0e11;">
+    <div class="container">
+        
+        <div class="row mb-4 align-items-center">
+            <div class="col-md-8">
+                <span class="badge bg-danger mb-2">Официальный осмотр</span>
+                <span class="ms-2 small" style="color: rgba(255,255,255,0.8);"><i class="far fa-calendar-alt"></i> Опубликовано: {{ report.created_at.strftime('%d.%m.%Y') }}</span>
+                <h1 class="display-5 fw-bold text-white">{{ report.model_name }}</h1>
+                <p class="mb-0" style="color: rgba(255,255,255,0.6);">УИН Отчета: {{ report.report_uid }}</p>
+            </div>
+            <div class="col-md-4 text-md-end text-start mt-3 mt-md-0">
+                <div class="p-3 bg-white shadow-sm rounded border">
+                    <div class="small text-muted text-uppercase mb-1">Финальная цена</div>
+                    <h3 class="fw-bold text-danger mb-0">{{ "{:,.0f}".format(report.price_cny).replace(',', ' ') }} ¥</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Левая колонка (Характеристики) -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold border-bottom pb-3 mb-3"><i class="fas fa-list-ul text-primary me-2"></i> Характеристики авто</h5>
+                        
+                        <div class="d-flex justify-content-between mb-3 border-bottom pb-2">
+                            <span class="text-muted">Год выпуска:</span>
+                            <span class="fw-bold text-dark">{{ report.year }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3 border-bottom pb-2">
+                            <span class="text-muted">Пробег:</span>
+                            <span class="fw-bold text-dark">{{ "{:,.0f}".format(report.mileage).replace(',', ' ') }} км</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3 border-bottom pb-2">
+                            <span class="text-muted">Мощность:</span>
+                            <span class="fw-bold text-dark">{{ report.horsepower }} л.с.</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-muted">Состояние:</span>
+                            <span class="fw-bold text-success"><i class="fas fa-check-circle"></i> Проверен</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm border-start border-4 border-primary">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3"><i class="fas fa-clipboard-check text-success me-2"></i> Описание дилера</h5>
+                        <p class="text-muted mb-0" style="white-space: pre-line;">{{ report.description or 'Нет дополнительного описания.' }}</p>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <!-- Правая колонка (Галерея) -->
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex flex-column align-items-end mb-4">
+                            <div class="d-flex justify-content-between align-items-center w-100 mb-2">
+                                <h5 class="fw-bold mb-0"><i class="fas fa-camera text-primary me-2"></i> Оригинальные фото с осмотра</h5>
+                                <button id="download-trigger" onclick="downloadAllPhotos()" 
+                                        data-urls='[ {%- for img in report.images -%}"{{ url_for("static", filename=img) }}"{%- if not loop.last -%},{%- endif -%}{%- endfor -%} ]'
+                                        class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                                    <i class="fas fa-download me-1"></i> Скачать все фото
+                                </button>
+                            </div>
+                            <span class="text-muted small" style="font-size: 10px;"><i class="fas fa-info-circle me-1"></i> Если скачалась только 1 за раз — разрешите в браузере "Скачивать несколько файлов"</span>
+                        </div>
+                        
+                        <!-- Галерея фото -->
+                        <div class="row row-cols-1 row-cols-md-2 g-3">
+                            {% for img in report.images %}
+                            <div class="col">
+                                <a href="{{ url_for('static', filename=img) }}" target="_blank">
+                                    <img src="{{ url_for('static', filename=img) }}" class="img-fluid rounded shadow-sm custom-hover-zoom" alt="Фото отчета Турбо-ДВ" style="width: 100%; height: 250px; object-fit: cover; transition: transform 0.3s ease;">
+                                </a>
+                            </div>
+                            {% endfor %}
+                            {% if not report.images %}
+                            <div class="col-12 text-center text-muted p-5 bg-light rounded">
+                                Фотографии не загружены.
+                            </div>
+                            {% endif %}
+                        </div>
+                        <p class="text-muted small text-center mt-4 mb-0"><i class="fas fa-info-circle"></i> Нажмите на фото, чтобы открыть его в максимально высоком 100% разрешении без сжатия.</p>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<script>
+    function downloadAllPhotos() {
+        const photos = JSON.parse(document.getElementById('download-trigger').dataset.urls);
+        if(!photos || photos.length === 0) return;
+        
+        photos.forEach((url, index) => {
+            setTimeout(() => {
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = url.split('/').pop();
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }, index * 250); // Small delay to prevent browser blocking multiple downloads
+        });
+    }
+</script>
+<style>
+    .custom-hover-zoom:hover { transform: scale(1.02); }
+</style>
+{% endblock %}

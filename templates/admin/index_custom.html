@@ -1,0 +1,695 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<div class="row" style="margin-top: 20px;">
+    <div class="col-md-12">
+        <h2 class="mb-4" style="font-weight: 800; color: #fff;">Панель управления <span
+                style="color: var(--accent);">Турбо-ДВ</span></h2>
+        <p class="text-muted">Добро пожаловать в систему управления каталогом. Здесь вы можете отслеживать состояние
+            склада и быстро добавлять новые позиции.</p>
+    </div>
+</div>
+
+<div class="row" style="margin-top: 30px;">
+    <!-- Последние поступления -->
+    <div class="col-md-8">
+        <div class="card bg-card">
+            <div class="card-header" style="background: var(--secondary); border-bottom: 2px solid var(--accent);">
+                <h4 class="mb-0 py-2"><i class="fas fa-history me-2"></i> Последние поступления</h4>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Марка / Модель</th>
+                            <th>Цена (¥)</th>
+                            <th>Цена (₽)</th>
+                            <th>Фикс</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for v in recent %}
+                        <tr id="vehicle-row-{{ v.id }}">
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ url_for('static', filename=v.main_image or 'images/no_photo.webp') }}"
+                                        style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover; margin-right: 15px;">
+                                    <div>
+                                        <strong>{{ v.brand }} {{ v.model }}</strong>
+                                        <div class="small text-muted">{{ v.year }} г.в.</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-warning fw-bold" style="cursor: pointer;" title="Быстрая правка юаней"
+                                onclick="quickEdit(this, {{ v.id }}, '{{ v.brand }} {{ v.model }}', 'price_cny')">
+                                <span class="val">{{ "{:,.0f}".format(v.price_cny or 0).replace(',', ' ') }}</span> ¥
+                            </td>
+                            <td class="text-white fw-bold rub-cell" style="cursor: pointer;"
+                                title="Быстрая правка рублей"
+                                onclick="quickEdit(this, {{ v.id }}, '{{ v.brand }} {{ v.model }}', 'price')">
+                                <span class="val">{{ "{:,.0f}".format(v.price).replace(',', ' ') }}</span> ₽
+                            </td>
+                            <td>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" {% if
+                                        v.is_currency_fixed %}checked{% endif %}
+                                        onchange="toggleFixed(this, {{ v.id }})">
+                                </div>
+                            </td>
+                            <td class="text-end">
+                                <a href="{{ url_for('vehicle.edit_view', id=v.id) }}" class="btn btn-xs btn-default">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Быстрые действия -->
+    <div class="col-md-4">
+        <div class="card bg-card p-4 h-100">
+            <h4 class="mb-4"><i class="fas fa-bolt me-2 text-warning"></i> Быстрые действия</h4>
+
+            <a href="{{ url_for('vehicle.create_view') }}" class="btn btn-primary btn-block mb-3 py-3"
+                style="font-size: 1.1rem;">
+                <i class="fas fa-plus-circle me-2"></i> Добавить товар
+            </a>
+
+            <a href="/" target="_blank" class="btn btn-default btn-block py-3 mb-3">
+                <i class="fas fa-external-link-alt me-2"></i> Перейти на сайт
+            </a>
+
+            <button onclick="syncPrices(this)" class="btn btn-outline-warning btn-block py-3">
+                <i class="fas fa-sync-alt me-2"></i> Обновить цены (по курсу ЦБ)
+            </button>
+
+            <div class="mt-4 p-3 rounded"
+                style="background: rgba(230, 0, 0, 0.05); border: 1px solid rgba(230, 0, 0, 0.1);">
+                <div class="small fw-bold mb-2 text-white"><i class="fas fa-magic me-1"></i> Мастер импорта:</div>
+                <div class="input-group input-group-sm mb-2">
+                    <input type="text" id="import-url" class="form-control bg-dark text-white border-secondary"
+                        placeholder="Ссылка на Авито/Дром/Auto.ru">
+                    <button class="btn btn-primary" type="button" onclick="importByLink(this)" title="Заполнить форму авто по ссылке">
+                        <i class="fas fa-bolt"></i>
+                    </button>
+                    <button class="btn btn-success" type="button" onclick="bulkImport(this)" title="Импортировать ВСЕ авто со страницы">
+                        <i class="fas fa-file-import"></i>
+                    </button>
+                </div>
+                <div class="small text-muted" style="font-size: 0.7rem;">
+                    * Вставьте ссылку, чтобы автоматически заполнить данные авто.
+                </div>
+            </div>
+
+            <div class="mt-4 p-3 rounded"
+                style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); color: #fff;">
+                <div class="small text-muted mb-2"><i class="fas fa-sync-alt me-1"></i> Автоматизация курсов:</div>
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="text-white-50">Курс CNY (ЦБ РФ):</span>
+                    <span class="text-warning fw-bold">{{ "{:,.2f}".format(stats.cny_rate) }} ₽</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="text-white-50">Ср. стоимость:</span>
+                    <span class="text-accent fw-bold">{{ "{:,.0f}".format(stats.avg_price).replace(',', ' ') }} ₽</span>
+                </div>
+                <div class="small text-muted mt-2" style="font-size: 0.75rem; line-height: 1.2; opacity: 0.6;">
+                    * Цены обновляются каждые 6 часов для авто, у которых не включена опция "Фикс. цена".
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Статистика -->
+<div class="row" style="margin-top: 20px;">
+    <div class="col-md-3">
+        <div class="card bg-card p-4 text-center" style="border-left: 5px solid var(--accent);">
+            <i class="bi bi-truck fa-3x mb-3" style="color: var(--accent);"></i>
+            <h3 style="font-weight: 800; margin-bottom: 5px;">{{ stats.total }}</h3>
+            <p class="text-muted text-uppercase small mb-0">Всего техники</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-card p-4 text-center" style="border-left: 5px solid #3498db;">
+            <i class="bi bi-car-front fa-3x mb-3" style="color: #3498db;"></i>
+            <h3 style="font-weight: 800; margin-bottom: 5px;">{{ stats.cars }}</h3>
+            <p class="text-muted text-uppercase small mb-0">Легковые</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-card p-4 text-center" style="border-left: 5px solid #f1c40f;">
+            <i class="bi bi-box-seam fa-3x mb-3" style="color: #f1c40f;"></i>
+            <h3 style="font-weight: 800; margin-bottom: 5px;">{{ stats.trucks }}</h3>
+            <p class="text-muted text-uppercase small mb-0">Грузовые</p>
+        </div>
+    </div>
+    <div class="col-md">
+        <div class="card bg-card p-4 text-center" style="border-left: 5px solid #2ecc71;">
+            <i class="bi bi-tools fa-3x mb-3" style="color: #2ecc71;"></i>
+            <h3 style="font-weight: 800; margin-bottom: 5px;">{{ stats.special }}</h3>
+            <p class="text-muted text-uppercase small mb-0">Спецтехника</p>
+        </div>
+    </div>
+    <div class="col-md">
+        <div class="card bg-card p-4 text-center" style="border-left: 5px solid #9b59b6;">
+            <i class="bi bi-file-earmark-text fa-3x mb-3" style="color: #9b59b6;"></i>
+            <h3 style="font-weight: 800; margin-bottom: 5px;">{{ stats.articles }}</h3>
+            <p class="text-muted text-uppercase small mb-0">Статьи</p>
+        </div>
+    </div>
+</div>
+
+<!-- Трафик и Визиты (Новое) -->
+<div class="row" style="margin-top: 25px;">
+    <div class="col-md-3">
+        <div class="card bg-card p-4 text-center" style="border-left: 5px solid #00f2fe; background: linear-gradient(135deg, rgba(0,242,254,0.1) 0%, rgba(79,172,254,0.1) 100%);">
+            <h3 style="font-weight: 800; margin-bottom: 5px;" class="text-white">{{ analytics.visitors_today }}</h3>
+            <p class="text-muted text-uppercase small mb-0">Посетителей сегодня</p>
+            <div class="small text-info mt-2">Уникальные IP</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-card p-4 text-center" style="border-left: 5px solid #4facfe;">
+            <h3 style="font-weight: 800; margin-bottom: 5px;" class="text-white">{{ analytics.visits_today }}</h3>
+            <p class="text-muted text-uppercase small mb-0">Просмотров сегодня</p>
+            <div class="small text-muted mt-2">Всего хитов: {{ analytics.visits_today }}</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-card p-4 text-center" style="border-left: 5px solid #43e97b;">
+            <h3 style="font-weight: 800; margin-bottom: 5px;" class="text-white">{{ analytics.visits_yesterday }}</h3>
+            <p class="text-muted text-uppercase small mb-0">Просмотров вчера</p>
+            {% set diff = analytics.visits_today - analytics.visits_yesterday %}
+            <div class="small {% if diff >= 0 %}text-success{% else %}text-danger{% endif %} mt-2">
+                {{ '+' if diff >= 0 }}{{ diff }} к вчера
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-card p-4 text-center" style="border-left: 5px solid #fa709a;">
+            <h3 style="font-weight: 800; margin-bottom: 5px;" class="text-white">{{ "{:,.0f}".format(stats.leads_total) }}</h3>
+            <p class="text-muted text-uppercase small mb-0">Всего заявок</p>
+            <div class="small text-warning mt-2">{{ stats.leads_new }} новых</div>
+        </div>
+    </div>
+</div>
+
+<!-- Графики трафика и заявок -->
+<div class="row" style="margin-top: 30px;">
+    <div class="col-md-6">
+        <div class="card bg-card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0"><i class="fas fa-chart-line me-2"></i> Динамика трафика</h4>
+                <div class="small text-muted">30 дней</div>
+            </div>
+            <div class="card-body">
+                <canvas id="trafficChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card bg-card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0"><i class="fas fa-chart-bar me-2"></i> Динамика заявок</h4>
+                <div class="small text-muted">30 дней</div>
+            </div>
+            <div class="card-body">
+                <canvas id="leadsChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" style="margin-top: 30px;">
+    <div class="col-md-8">
+        <div class="card bg-card h-100">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-list-ol me-2"></i> Топ страниц</h4>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush bg-transparent">
+                    {% for page in analytics.top_pages %}
+                    <li class="list-group-item bg-transparent text-white border-secondary d-flex justify-content-between align-items-center py-3">
+                        <span class="text-truncate me-2" title="{{ page.path }}">{{ page.path }}</span>
+                        <span class="badge bg-primary rounded-pill">{{ page.count }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% if not analytics.top_pages %}
+                <div class="p-4 text-center text-muted">
+                    <i class="fas fa-info-circle mb-2 fa-2x"></i><br>Данных пока нет
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .bg-card {
+        background-color: var(--secondary) !important;
+        color: white;
+    }
+
+    .card {
+        border-radius: 15px !important;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        background-color: var(--secondary) !important;
+    }
+
+    .card-header {
+        background-color: rgba(255, 255, 255, 0.03) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .table {
+        color: white !important;
+        background-color: transparent !important;
+    }
+
+    .badge {
+        padding: 6px 12px !important;
+        border-radius: 8px !important;
+        font-weight: 500;
+    }
+
+    .text-accent {
+        color: var(--accent) !important;
+    }
+
+    .btn-block {
+        width: 100%;
+        display: block;
+    }
+
+    .btn-outline-warning {
+        border-color: rgba(241, 196, 15, 0.4) !important;
+        color: #f1c40f !important;
+    }
+
+    .btn-outline-warning:hover {
+        background-color: #f1c40f !important;
+        color: #000 !important;
+    }
+</style>
+
+<script>
+    function quickEdit(el, id, name, field) {
+        let currentVal = el.querySelector('.val').innerText.replace(/ /g, '');
+        let label = field === 'price_cny' ? 'Цена (¥)' : 'Цена (₽)';
+        let newVal = prompt('Новая ' + label + ' для ' + name + ':', currentVal);
+
+        if (newVal !== null && newVal !== currentVal) {
+            let formData = new FormData();
+            formData.append('id', id);
+            formData.append('field', field);
+            formData.append('value', newVal);
+
+            el.style.opacity = '0.5';
+
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+            fetch('{{ url_for("admin.update_price") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    el.style.opacity = '1';
+                    if (data.success) {
+                        // Прямое обновление ячейки, которую правили
+                        let formatted = Number(newVal.replace(/ /g, '')).toLocaleString('ru-RU').replace(/,/g, ' ');
+                        el.querySelector('.val').innerText = formatted;
+
+                        // Если правили Юани, нужно обновить и Рубли (т.к. они могли пересчитаться)
+                        if (field === 'price_cny' && data.new_price_rub) {
+                            let rubCell = document.querySelector('#vehicle-row-' + id + ' .rub-cell .val');
+                            if (rubCell) {
+                                rubCell.innerText = data.new_price_rub.toLocaleString('ru-RU').replace(/,/g, ' ');
+                            }
+                        }
+                    } else {
+                        alert('Ошибка: ' + (data.error || 'Не удалось обновить'));
+                    }
+                });
+        }
+    }
+
+    function syncPrices(btn) {
+        if (!confirm('Вы уверены, что хотите обновить все цены по текущему курсу? Это изменит рублевую стоимость всех товаров с незакрепленным курсом.')) return;
+
+        const originalHTML = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Обновление...';
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+        fetch('{{ url_for("admin.sync_prices") }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+                if (data.success) {
+                    alert(data.message);
+                    location.reload();
+                } else {
+                    alert('Ошибка: ' + (data.error || 'Неизвестная ошибка'));
+                }
+            })
+            .catch(err => {
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+                alert('Ошибка сети: ' + err);
+            });
+    }
+
+    function toggleFixed(checkbox, id) {
+        let formData = new FormData();
+        formData.append('id', id);
+        formData.append('field', 'is_currency_fixed');
+        formData.append('value', checkbox.checked);
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+        fetch('{{ url_for("admin.update_price") }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.new_price_rub) {
+                    // Обновляем рубли, т.к. при снятии фикса они пересчитываются
+                    let rubCell = document.querySelector('#vehicle-row-' + id + ' .rub-cell .val');
+                    if (rubCell) {
+                        rubCell.innerText = data.new_price_rub.toLocaleString('ru-RU').replace(/,/g, ' ');
+                    }
+                } else if (!data.success) {
+                    checkbox.checked = !checkbox.checked;
+                    alert('Ошибка: ' + data.error);
+                }
+            });
+    }
+
+    function toggleFixed(checkbox, id) {
+        const value = checkbox.checked;
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        
+        const formData = new FormData();
+        formData.append('id', id);
+        formData.append('field', 'is_currency_fixed');
+        formData.append('value', value);
+
+        fetch('{{ url_for("admin.index") }}' + 'quick_edit/', {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                if (data.new_price_rub) {
+                    const row = checkbox.closest('tr');
+                    const rubCell = row.querySelector('.rub-cell .val');
+                    if (rubCell) rubCell.innerText = Math.round(data.new_price_rub).toLocaleString('ru-RU').replace(/,/g, ' ');
+                }
+            } else {
+                alert('Ошибка: ' + data.error);
+                checkbox.checked = !value;
+            }
+        }).catch(e => {
+            alert('Ошибка сети');
+            checkbox.checked = !value;
+        });
+    }
+
+    function quickEdit(cell, id, name, field) {
+        const currentVal = cell.querySelector('.val').innerText.replace(/\s/g, '');
+        const newVal = prompt(`Изменить ${field === 'price' ? 'рубли' : 'юани'} для ${name}:`, currentVal);
+        
+        if (newVal === null || newVal === currentVal) return;
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        const formData = new FormData();
+        formData.append('id', id);
+        formData.append('field', field);
+        formData.append('value', newVal.replace(/\D/g, ''));
+
+        fetch('{{ url_for("admin.index") }}' + 'quick_edit/', {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                cell.querySelector('.val').innerText = Math.round(data.value || newVal).toLocaleString('ru-RU').replace(/,/g, ' ');
+                if (data.new_price_rub) {
+                    const row = cell.closest('tr');
+                    const rubCell = row.querySelector('.rub-cell .val');
+                    if (rubCell) rubCell.innerText = Math.round(data.new_price_rub).toLocaleString('ru-RU').replace(/,/g, ' ');
+                }
+            } else {
+                alert('Ошибка: ' + data.error);
+            }
+        });
+    }
+
+    function syncPrices(btn) {
+        const originalHTML = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Считаю...';
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        
+        fetch('{{ url_for("admin.sync_prices") }}', {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken }
+        })
+        .then(res => res.json())
+        .then(data => {
+            btn.disabled = false;
+            btn.innerHTML = originalHTML;
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert('Ошибка: ' + data.error);
+            }
+        }).catch(e => {
+            btn.disabled = false;
+            btn.innerHTML = originalHTML;
+            alert('Ошибка сервера');
+        });
+    }
+
+    function importByLink(btn) {
+        const urlInput = document.getElementById('import-url');
+        const url = urlInput.value.trim();
+        if (!url) {
+            alert('Пожалуйста, вставьте ссылку');
+            return;
+        }
+
+        const originalHTML = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+        const formData = new FormData();
+        formData.append('url', url);
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+        fetch('{{ url_for("admin.parse_link_view") }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+                if (data.success && data.redirect_url) {
+                    window.location.href = data.redirect_url;
+                } else {
+                    alert('Ошибка: ' + (data.error || 'Не удалось разобрать ссылку. Попробуйте другую или заполните вручную.'));
+                }
+            })
+            .catch(err => {
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+                alert('Ошибка сети или сервера');
+            });
+    }
+
+    function bulkImport(btn) {
+        const urlInput = document.getElementById('import-url');
+        const url = urlInput.value.trim();
+        if (!url) {
+            alert('Пожалуйста, вставьте ссылку');
+            return;
+        }
+
+        if (!confirm('Вы уверены? Это создаст карточки для всех автомобилей со страницы.')) return;
+
+        const originalHTML = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+        const formData = new FormData();
+        formData.append('url', url);
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+        fetch('{{ url_for("admin.bulk_import") }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+                if (data.success) {
+                    alert(data.message);
+                    location.reload();
+                } else {
+                    alert('Ошибка: ' + (data.error || 'Не удалось импортировать.'));
+                }
+            })
+            .catch(err => {
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+                alert('Ошибка сети или сервера: ' + err);
+            });
+    }
+
+    function bulkImport(btn) {
+        const urlInput = document.getElementById('import-url');
+        const url = urlInput.value.trim();
+        if (!url) {
+            alert('Пожалуйста, вставьте ссылку');
+            return;
+        }
+
+        if (!confirm('Вы уверены? Это создаст карточки для всех автомобилей со страницы.')) return;
+
+        const originalHTML = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+        const formData = new FormData();
+        formData.append('url', url);
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+        fetch('{{ url_for("admin.bulk_import") }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+                if (data.success) {
+                    alert(data.message);
+                    location.reload();
+                } else {
+                    alert('Ошибка: ' + (data.error || 'Не удалось импортировать.'));
+                }
+            })
+            .catch(err => {
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+                alert('Ошибка сети или сервера: ' + err);
+            });
+    }
+    // 📊 Графики (Chart.js)
+    document.addEventListener('DOMContentLoaded', function() {
+        // Загружаем Chart.js динамически
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+        script.onload = function() {
+            // График 1: Трафик
+            const ctxT = document.getElementById('trafficChart').getContext('2d');
+            new Chart(ctxT, {
+                type: 'line',
+                data: {
+                    labels: {{ analytics.traffic_labels|tojson }},
+                    datasets: [
+                        {
+                            label: 'Просмотры (PV)',
+                            data: {{ analytics.traffic_pv_data|tojson }},
+                            borderColor: '#4facfe',
+                            backgroundColor: 'rgba(79, 172, 254, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#4facfe'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666' } },
+                        x: { grid: { display: false }, ticks: { color: '#666', maxRotation: 45, minRotation: 45 } }
+                    }
+                }
+            });
+
+            // График 2: Заявки (Leads)
+            const ctxL = document.getElementById('leadsChart').getContext('2d');
+            new Chart(ctxL, {
+                type: 'bar',
+                data: {
+                    labels: {{ analytics.leads_by_day_labels|tojson }},
+                    datasets: [{
+                        label: 'Заявки',
+                        data: {{ analytics.leads_by_day_data|tojson }},
+                        backgroundColor: '#fa709a',
+                        borderRadius: 5,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666', stepSize: 1 } },
+                        x: { grid: { display: false }, ticks: { color: '#666', maxRotation: 45, minRotation: 45 } }
+                    }
+                }
+            });
+        };
+        document.head.appendChild(script);
+    });
+</script>
+{% endblock %}

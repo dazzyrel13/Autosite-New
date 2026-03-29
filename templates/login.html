@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Вход в панель управления{% endblock %}
+
+{% block content %}
+<section class="vh-100 d-flex align-items-center justify-content-center" style="background: var(--bg-light);">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="bg-card p-5 rounded-5 shadow-lg border border-secondary border-opacity-10"
+                    data-aos="zoom-in">
+                    <div class="text-center mb-5">
+                        <div class="china-seal mb-3">TD</div>
+                        <h2 class="fw-bold text-white">Админ-панель</h2>
+                        <p class="text-white-50">Введите данные для входа</p>
+                    </div>
+
+                    <form id="loginForm">
+                        {{ form.hidden_tag() }}
+                        <div class="mb-4">
+                            <label class="form-label text-white-50 small text-uppercase">Логин</label>
+                            {{ form.username(class="form-control rounded-4 border-0 bg-dark text-white p-3",
+                            required=True) }}
+                        </div>
+                        <div class="mb-5">
+                            <label class="form-label text-white-50 small text-uppercase">Пароль</label>
+                            {{ form.password(class="form-control rounded-4 border-0 bg-dark text-white p-3",
+                            required=True) }}
+                        </div>
+                        <button type="submit" class="btn btn-primary-custom w-100 py-3 rounded-4 fw-bold">Войти в
+                            систему</button>
+                    </form>
+
+                    <div id="loginFeedback" class="mt-4 text-center text-danger small" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const feedback = document.getElementById('loginFeedback');
+
+        fetch("{{ url_for('login') }}", {
+            method: 'POST',
+            body: formData
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = "{{ url_for('admin.index') }}";
+                } else {
+                    feedback.textContent = data.message;
+                    feedback.style.display = 'block';
+                }
+            });
+    });
+</script>
+
+<style>
+    .bg-card {
+        background-color: var(--bg-offset);
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,18 @@
+{
+  "name": "Turbo DV",
+  "short_name": "Turbo DV",
+  "description": "Автомобили и спецтехника нового поколения",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0101",
+  "theme_color": "#e63946",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/static/logo_emblem.webp",
+      "sizes": "192x192 256x256 512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ]
+}

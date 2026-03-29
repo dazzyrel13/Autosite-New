@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+
+{% block title %}Купить {{ vehicle.brand }} {{ vehicle.model }}{% if vehicle.year %} {{ vehicle.year }} года{% endif %}:
+цена, фото, характеристики из Китая — «Турбо-ДВ»{% endblock %}
+
+{% block meta %}
+<meta name="description"
+    content="Заказать {{ vehicle.brand }} {{ vehicle.model }} напрямую из Китая. Описание, фото, характеристики и актуальные цены. Надежная поставка от Турбо-ДВ (Turbo-DV).">
+<meta name="keywords"
+    content="{{ vehicle.brand }}, {{ vehicle.model }}, купить авто, спецтехника из китая, {{ vehicle.category }}, турбо-дв, turbo-dv, turbodv">
+<meta property="og:title" content="{{ vehicle.brand }} {{ vehicle.model }} — Отличная цена в Турбо-ДВ (Turbo-DV)">
+<meta property="og:description"
+    content="Подробные характеристики и заказ {{ vehicle.brand }} {{ vehicle.model }}. Быстрая доставка по всей России.">
+{% if vehicle.main_image %}
+<meta property="og:image" content="{{ url_for('static', filename=vehicle.main_image, _external=True) }}">
+{% endif %}
+<meta property="og:type" content="article">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Car",
+  "name": "{{ vehicle.brand }} {{ vehicle.model }}",
+  "brand": {
+    "@type": "Brand",
+    "name": "{{ vehicle.brand }}"
+  },
+  "model": "{{ vehicle.model }}",
+  "productionDate": "{{ vehicle.year }}",
+  "mileageFromOdometer": {
+    "@type": "QuantitativeValue",
+    "value": "{{ vehicle.mileage }}",
+    "unitCode": "KMT"
+  },
+  "image": "{{ url_for('static', filename=vehicle.main_image or 'images/no_photo.webp', _external=True) }}",
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "RUB",
+    "price": "{{ vehicle.price }}",
+    "availability": "https://schema.org/InStock"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Главная",
+    "item": "{{ url_for('index', _external=True) }}"
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "name": "{{ cat_labels.get(vehicle.category, 'Каталог') }}",
+    "item": "{{ url_for('catalog', cat_slug=vehicle.category, _external=True) }}"
+  },{
+    "@type": "ListItem",
+    "position": 3,
+    "name": "{{ vehicle.brand }} {{ vehicle.model }}",
+    "item": "{{ request.url }}"
+  }]
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ static_versioned('vehicle_detail.css') }}">
+<div class="fluid-overlay"></div>
+
+<section class="vehicle-detail-section py-5">
+    <div class="container py-5">
+        <!-- Modern Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-5" data-aos="fade-down">
+            <ol class="breadcrumb bg-card p-3 rounded-4 px-4 m-0 shadow-sm border border-secondary border-opacity-10">
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('index') }}"
+                        class="text-decoration-none text-white opacity-75 fw-medium hover-accent">Главная</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('catalog', cat_slug=vehicle.category) }}"
+                        class="text-decoration-none text-white opacity-75 fw-medium hover-accent">
+                        {{ cat_labels.get(vehicle.category, 'Каталог') }}
+                    </a>
+                </li>
+                <li class="breadcrumb-item active fw-bold text-white" aria-current="page"
+                    style="opacity: 1 !important;">
+                    {{ vehicle.brand }} {{ vehicle.model }}
+                </li>
+            </ol>
+        </nav>
+
+        <div class="row g-5">
+            <!-- Left: Gallery & Description -->
+            <div class="col-lg-7" data-aos="fade-right">
+                <div class="rounded-5 overflow-hidden shadow-lg mb-5 border border-secondary border-opacity-10">
+                    <div id="vehicleCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            {% for img in vehicle.images or [] %}
+                            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                <img src="{{ url_for('static', filename=img) }}"
+                                    class="vehicle-gallery-img d-block w-100" alt="{{ vehicle.brand }}" loading="lazy">
+                            </div>
+                            {% else %}
+                            <div class="carousel-item active">
+                                <img src="{{ url_for('static', filename=vehicle.main_image or 'images/no_photo.webp') }}"
+                                    class="vehicle-gallery-img d-block w-100" alt="{{ vehicle.brand }}">
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% if vehicle.images|length > 1 %}
+                        <button class="carousel-control-prev" type="button" data-bs-target="#vehicleCarousel"
+                            data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon rounded-circle bg-dark p-3"
+                                aria-hidden="true"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#vehicleCarousel"
+                            data-bs-slide="next">
+                            <span class="carousel-control-next-icon rounded-circle bg-dark p-3"
+                                aria-hidden="true"></span>
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="p-5 bg-card rounded-5 shadow-sm border border-secondary border-opacity-10"
+                    data-aos="fade-up">
+                    <h3 class="fw-bold mb-4 text-white">Описание модели</h3>
+                    <div class="text-white opacity-75 fs-5 lh-lg">{{ vehicle.description }}</div>
+                </div>
+            </div>
+
+            <!-- Right: Info & Actions -->
+            <div class="col-lg-5">
+                <div class="sticky-top" style="top: 120px;" data-aos="fade-left">
+                    <div class="p-5 bg-card rounded-5 shadow-lg border border-secondary border-opacity-10">
+                        <div class="mb-4">
+                            <span
+                                class="badge bg-accent-soft text-accent px-3 py-2 rounded-3 text-uppercase fw-bold small mb-2 d-inline-block">{{
+                                vehicle.badge }}</span>
+                            <h1 class="display-5 fw-bold text-white mb-2 line-height-1">{{ vehicle.brand }}</h1>
+                            <h2 class="h3 fw-light text-white opacity-75">{{ vehicle.model }}</h2>
+                        </div>
+
+                        <div class="vehicle-detail-price mb-2">
+                            {% if vehicle.price %}
+                                {{ "{:,.0f}".format(vehicle.price).replace(',', ' ') }} ₽
+                            {% else %}
+                                Цена по запросу
+                            {% endif %}
+                        </div>
+
+                        <div class="row g-3 mt-4 mb-5">
+                            <div class="col-6">
+                                <div class="p-3 bg-dark rounded-4 text-center">
+                                    <div class="text-white opacity-50 small mb-1">Год</div>
+                                    <div class="fw-bold fs-5 text-accent">{{ vehicle.year }}</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-3 bg-dark rounded-4 text-center">
+                                    <div class="text-white opacity-50 small mb-1">Пробег</div>
+                                    <div class="fw-bold fs-5 text-accent">{% if vehicle.mileage %}{{ vehicle.mileage }} км{% else %}-{% endif %}</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-3 bg-dark rounded-4 text-center">
+                                    <div class="text-white opacity-50 small mb-1">Объем</div>
+                                    <div class="fw-bold fs-5 text-accent">{% if vehicle.engine_vol %}{{ vehicle.engine_vol }} л{% else %}-{% endif %}</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-3 bg-dark rounded-4 text-center">
+                                    <div class="text-white opacity-50 small mb-1">Мощность</div>
+                                    <div class="fw-bold fs-5 text-accent">{% if vehicle.power %}{{ vehicle.power }} л.с.{% else %}-{% endif %}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h5 class="fw-bold mb-3 d-flex align-items-center text-white"><i
+                                class="bi bi-list-check me-2 text-accent"></i> Спецификация</h5>
+                        <div class="list-group list-group-flush mb-5">
+                            {% for spec in vehicle.specifications or [] %}
+                            <div
+                                class="list-group-item bg-transparent d-flex justify-content-between px-0 py-3 border-secondary border-opacity-25">
+                                <span class="text-white opacity-75">{{ spec.name }}</span>
+                                <span class="fw-bold text-white">{{ spec.value }}</span>
+                            </div>
+                            {% else %}
+                            <div class="list-group-item bg-transparent text-center text-white opacity-50 py-3 px-0 border-0">
+                                Характеристики будут добавлены позже
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        {% if vehicle.status == 'sold' %}
+                        <button class="btn btn-secondary w-100 py-4 fs-5 mb-3" data-bs-toggle="modal"
+                            data-bs-target="#callbackModal">
+                            Привезти такую же
+                        </button>
+                        {% else %}
+                        <button class="btn btn-primary-custom w-100 py-4 fs-5 mb-3" data-bs-toggle="modal"
+                            data-bs-target="#callbackModal">
+                            Запросить наличие
+                        </button>
+                        {% endif %}
+                    </div>
+
+                    <div class="mt-4 text-center p-4 bg-accent-soft rounded-5 text-accent fw-bold small"
+                        style="border: 1px dashed var(--accent);">
+                        <i class="bi bi-shield-check me-2"></i> Безопасная сделка & Юридический контроль
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Callback Modal Modern -->
+<div class="modal fade" id="callbackModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-5 shadow-lg overflow-hidden"
+            style="background-color: #0a0101; border: 1px solid rgba(255, 255, 255, 0.1) !important;">
+            <div class="modal-body p-5">
+                <div class="text-center mb-5">
+                    <div class="bg-accent-soft rounded-circle d-inline-flex p-4 mb-4">
+                        <i class="bi bi-envelope-check fs-1 text-accent"></i>
+                    </div>
+                    <h3 class="fw-bold text-white">Оставить заявку</h3>
+                    <p class="text-white opacity-75">Мы свяжемся с вами в ближайшее время для уточнения всех деталей по
+                        данной модели.</p>
+                </div>
+                <form id="vehicleOrderForm" class="ajax-lead-form">
+                    <input type="hidden" name="item" value="{{ vehicle.brand }} {{ vehicle.model }} {{ vehicle.year }}">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control rounded-4 border-0 bg-dark text-white" id="nameInput"
+                            name="name" placeholder="Имя" required>
+                        <label for="nameInput" class="text-muted">Ваше имя</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="tel" class="form-control rounded-4 border-0 bg-dark text-white" id="phoneInput"
+                            name="phone" placeholder="Телефон" required>
+                        <label for="phoneInput" class="text-muted">Телефон</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control rounded-4 border-0 bg-dark text-white" id="cityInput"
+                            name="city" placeholder="Город" required>
+                        <label for="cityInput" class="text-muted">Ваш город</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary-custom w-100 py-4 fs-5 mt-4">Отправить данные</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

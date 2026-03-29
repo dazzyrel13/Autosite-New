@@ -1,0 +1,564 @@
+{% extends "base.html" %}
+
+{% block title %}Купить {{ title | lower }} из Китая с доставкой по РФ | Цены, фото — «Турбо-ДВ»{% endblock %}
+
+{% block meta %}
+<meta name="description"
+    content="Каталог: {{ title }}. Выберите надежную технику в Турбо-ДВ (Turbo-DV). Прямые поставки из Китая, гарантия качества и выгодные цены.">
+<meta name="keywords"
+    content="каталог {{ title }}, автомобили из китая, китайская спецтехника, купить благовещенск, турбо-дв, turbo-dv, turbodv">
+<meta property="og:title" content="{{ title }} — Каталог Турбо-ДВ (Turbo-DV)">
+<meta property="og:description"
+    content="Большой выбор техники в категории: {{ title }}. Доставка по всей России, полное оформление документов и выгодные условия.">
+<meta property="og:type" content="website">
+{% if pagination and pagination.has_prev %}
+<link rel="prev" href="{{ url_for(request.endpoint, page=pagination.prev_num, **request.view_args) }}">
+{% endif %}
+{% if pagination and pagination.has_next %}
+<link rel="next" href="{{ url_for(request.endpoint, page=pagination.next_num, **request.view_args) }}">
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="fluid-overlay"></div>
+
+<style>
+    .vehicles-section {
+        padding-top: 160px !important;
+    }
+
+    .section-title {
+        margin-top: 60px !important;
+    }
+
+    @media (max-width: 768px) {
+        .vehicles-section {
+            padding-top: 100px !important;
+        }
+        .section-title {
+            margin-top: 20px !important;
+        }
+        .display-4 {
+            font-size: 2.2rem !important;
+        }
+    }
+
+    /* ═══════ Filter Panel ═══════ */
+    .filter-panel {
+        background: rgba(255, 0, 21, 0.03);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 0, 21, 0.15);
+        border-radius: 24px;
+        padding: 28px 32px;
+        margin-bottom: 36px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .filter-panel:hover {
+        border-color: rgba(255, 0, 21, 0.3);
+        box-shadow: 0 8px 32px rgba(255, 0, 21, 0.08);
+    }
+
+    .filter-toggle-btn {
+        background: rgba(255, 0, 21, 0.08);
+        border: 1px solid rgba(255, 0, 21, 0.2);
+        color: white;
+        border-radius: 14px;
+        padding: 12px 24px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .filter-toggle-btn:hover {
+        background: rgba(255, 0, 21, 0.15);
+        border-color: var(--accent);
+        transform: translateY(-2px);
+    }
+
+    .filter-toggle-btn .chevron-icon {
+        transition: transform 0.3s ease;
+    }
+
+    .filter-toggle-btn[aria-expanded="true"] .chevron-icon {
+        transform: rotate(180deg);
+    }
+
+    .filter-input {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 11px 16px;
+        color: white;
+        font-size: 0.88rem;
+        width: 100%;
+        transition: all 0.3s ease;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
+    .filter-input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(255, 0, 21, 0.15);
+        outline: none;
+        background: rgba(255, 255, 255, 0.07);
+    }
+
+    .filter-input::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+    }
+
+    .filter-input option {
+        background: #1a0505;
+        color: white;
+    }
+
+    .filter-label {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .filter-group {
+        position: relative;
+    }
+
+    .filter-actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .btn-filter-apply {
+        background: var(--accent);
+        color: white;
+        border: none;
+        border-radius: 14px;
+        padding: 12px 32px;
+        font-weight: 700;
+        font-size: 0.88rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 20px rgba(255, 0, 21, 0.25);
+    }
+
+    .btn-filter-apply:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(255, 0, 21, 0.35);
+    }
+
+    .btn-filter-reset {
+        background: transparent;
+        color: rgba(255, 255, 255, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        padding: 12px 24px;
+        font-weight: 600;
+        font-size: 0.88rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .btn-filter-reset:hover {
+        color: white;
+        border-color: rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Active filter tags */
+    .active-filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 16px;
+    }
+
+    .filter-tag {
+        background: rgba(255, 0, 21, 0.12);
+        border: 1px solid rgba(255, 0, 21, 0.3);
+        color: white;
+        border-radius: 10px;
+        padding: 6px 14px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .filter-tag:hover {
+        background: rgba(255, 0, 21, 0.2);
+    }
+
+    .filter-tag .remove-tag {
+        cursor: pointer;
+        opacity: 0.6;
+        transition: opacity 0.2s;
+        font-size: 0.9rem;
+    }
+
+    .filter-tag .remove-tag:hover {
+        opacity: 1;
+    }
+
+    /* Sort bar */
+    .sort-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 28px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .sort-bar .result-count {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.92rem;
+    }
+
+    .sort-bar .result-count strong {
+        color: var(--accent);
+        font-weight: 700;
+    }
+
+    .sort-select {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        color: white;
+        padding: 9px 16px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        -webkit-appearance: none;
+        appearance: none;
+        min-width: 180px;
+        transition: all 0.3s ease;
+    }
+
+    .sort-select:focus {
+        border-color: var(--accent);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(255, 0, 21, 0.12);
+    }
+
+    .sort-select option {
+        background: #1a0505;
+        color: white;
+    }
+
+    /* Responsive filters */
+    @media (max-width: 768px) {
+        .filter-panel {
+            padding: 20px;
+            border-radius: 20px;
+        }
+        .filter-actions {
+            flex-direction: column;
+            width: 100%;
+        }
+        .btn-filter-apply, .btn-filter-reset {
+            width: 100%;
+            text-align: center;
+        }
+        .sort-bar {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .sort-select {
+            width: 100%;
+        }
+    }
+</style>
+
+<section class="vehicles-section" style="background: transparent; padding-bottom: 80px;">
+    <div class="container">
+        <div class="section-title text-start mb-4" data-aos="fade-up">
+            <span class="text-accent fw-bold text-uppercase small d-block mb-2"
+                style="letter-spacing: 3px;">Каталог</span>
+            <h1 class="display-4 fw-bold text-white mb-3">{{ title }}</h1>
+        </div>
+
+        <!-- ═══════ FILTER PANEL ═══════ -->
+        {% set has_active_filters = filter_data and (filter_data.brand or filter_data.price_from or filter_data.price_to or filter_data.year_from or filter_data.year_to or filter_data.mileage_to) %}
+
+        <div class="filter-panel" data-aos="fade-up" data-aos-delay="100">
+            <!-- Toggle button for mobile & desktop -->
+            <div class="d-flex justify-content-between align-items-center">
+                <button class="filter-toggle-btn" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#filterCollapse"
+                    aria-expanded="{{ 'true' if has_active_filters else 'false' }}"
+                    aria-controls="filterCollapse">
+                    <i class="bi bi-sliders"></i>
+                    Фильтры
+                    {% if has_active_filters %}
+                    <span class="badge bg-accent rounded-pill" style="font-size: 0.7rem;">Активны</span>
+                    {% endif %}
+                    <i class="bi bi-chevron-down chevron-icon"></i>
+                </button>
+
+                {% if has_active_filters %}
+                <a href="{{ request.path }}" class="btn-filter-reset d-none d-md-inline-flex">
+                    <i class="bi bi-x-circle me-1"></i> Сбросить всё
+                </a>
+                {% endif %}
+            </div>
+
+            <div class="collapse {{ 'show' if has_active_filters else '' }}" id="filterCollapse">
+                <form method="GET" action="{{ request.path }}" id="filterForm">
+                    <div class="row g-3 mt-3">
+                        <!-- Brand -->
+                        <div class="col-md-3 col-6 filter-group">
+                            <label class="filter-label">Марка</label>
+                            <select name="brand" class="filter-input">
+                                <option value="">Все марки</option>
+                                {% for b in available_brands %}
+                                <option value="{{ b }}" {{ 'selected' if filter_data.brand == b else '' }}>{{ b }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Price From -->
+                        <div class="col-md-2 col-6 filter-group">
+                            <label class="filter-label">Цена от (₽)</label>
+                            <input type="number" name="price_from" class="filter-input"
+                                placeholder="500 000" value="{{ filter_data.price_from }}" min="0" step="100000">
+                        </div>
+
+                        <!-- Price To -->
+                        <div class="col-md-2 col-6 filter-group">
+                            <label class="filter-label">Цена до (₽)</label>
+                            <input type="number" name="price_to" class="filter-input"
+                                placeholder="10 000 000" value="{{ filter_data.price_to }}" min="0" step="100000">
+                        </div>
+
+                        <!-- Year From -->
+                        <div class="col-md-2 col-6 filter-group">
+                            <label class="filter-label">Год от</label>
+                            <input type="number" name="year_from" class="filter-input"
+                                placeholder="2018" value="{{ filter_data.year_from }}" min="2000" max="2030">
+                        </div>
+
+                        <!-- Year To -->
+                        <div class="col-md-1 col-6 filter-group">
+                            <label class="filter-label">Год до</label>
+                            <input type="number" name="year_to" class="filter-input"
+                                placeholder="2026" value="{{ filter_data.year_to }}" min="2000" max="2030">
+                        </div>
+
+                        <!-- Mileage To -->
+                        <div class="col-md-2 col-6 filter-group">
+                            <label class="filter-label">Пробег до (км)</label>
+                            <input type="number" name="mileage_to" class="filter-input"
+                                placeholder="100 000" value="{{ filter_data.mileage_to }}" min="0" step="10000">
+                        </div>
+                    </div>
+
+                    <!-- Actions row -->
+                    <div class="d-flex flex-wrap justify-content-between align-items-center mt-4 gap-3">
+                        <div class="filter-actions">
+                            <button type="submit" class="btn-filter-apply">
+                                <i class="bi bi-funnel me-2"></i>Применить
+                            </button>
+                            <a href="{{ request.path }}" class="btn-filter-reset">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i>Сбросить
+                            </a>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Active filter tags -->
+                {% if has_active_filters %}
+                <div class="active-filters">
+                    {% if filter_data.brand %}
+                    <span class="filter-tag">
+                        <i class="bi bi-car-front-fill" style="color: var(--accent);"></i>
+                        {{ filter_data.brand }}
+                        <span class="remove-tag" data-filter="brand">&times;</span>
+                    </span>
+                    {% endif %}
+                    {% if filter_data.price_from %}
+                    <span class="filter-tag">
+                        от {{ "{:,.0f}".format(filter_data.price_from|float).replace(',', ' ') }} ₽
+                        <span class="remove-tag" data-filter="price_from">&times;</span>
+                    </span>
+                    {% endif %}
+                    {% if filter_data.price_to %}
+                    <span class="filter-tag">
+                        до {{ "{:,.0f}".format(filter_data.price_to|float).replace(',', ' ') }} ₽
+                        <span class="remove-tag" data-filter="price_to">&times;</span>
+                    </span>
+                    {% endif %}
+                    {% if filter_data.year_from %}
+                    <span class="filter-tag">
+                        от {{ filter_data.year_from }} г.
+                        <span class="remove-tag" data-filter="year_from">&times;</span>
+                    </span>
+                    {% endif %}
+                    {% if filter_data.year_to %}
+                    <span class="filter-tag">
+                        до {{ filter_data.year_to }} г.
+                        <span class="remove-tag" data-filter="year_to">&times;</span>
+                    </span>
+                    {% endif %}
+                    {% if filter_data.mileage_to %}
+                    <span class="filter-tag">
+                        <i class="bi bi-speedometer2" style="color: var(--accent);"></i>
+                        до {{ "{:,.0f}".format(filter_data.mileage_to|float).replace(',', ' ') }} км
+                        <span class="remove-tag" data-filter="mileage_to">&times;</span>
+                    </span>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- ═══════ SORT BAR & COUNT ═══════ -->
+        <div class="sort-bar" data-aos="fade-up" data-aos-delay="150">
+            <div class="result-count">
+                Найдено: <strong>{{ total_count }}</strong> предложений
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="text-white-50 small d-none d-sm-inline"><i class="bi bi-sort-down me-1"></i>Сортировка:</span>
+                <select class="sort-select" id="sortSelect" onchange="applySort(this.value)">
+                    {% for key, (label, _) in sort_options.items() %}
+                    <option value="{{ key }}" {{ 'selected' if filter_data.sort == key else '' }}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <!-- ═══════ VEHICLE GRID ═══════ -->
+        <div class="row g-4">
+            {% for vehicle in vehicles %}
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 50 }}">
+                {% include 'components/vehicle_card.html' %}
+            </div>
+            {% else %}
+            <div class="col-12 text-center py-5" data-aos="fade-up">
+                <div class="bg-card p-5 rounded-5 shadow-sm border border-dashed">
+                    <i class="bi bi-search fs-1 text-muted mb-4 d-block"></i>
+                    <h3 class="fw-bold text-white">Ничего не нашли?</h3>
+                    <p class="text-white opacity-75">
+                        {% if has_active_filters %}
+                        Попробуйте изменить параметры фильтра или
+                        <a href="{{ request.path }}" class="text-accent text-decoration-none fw-bold">сбросить фильтры</a>.
+                        {% else %}
+                        Мы можем привезти практически любую технику под ваш запрос напрямую с заводов Китая.
+                        {% endif %}
+                    </p>
+                    {% if has_active_filters %}
+                    <a href="{{ request.path }}" class="btn btn-primary-custom px-5 mt-3">Сбросить фильтры</a>
+                    {% else %}
+                    <a href="{{ url_for('contact') }}" class="btn btn-primary-custom px-5 mt-4">Оставить заявку на
+                        поиск</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- PAGINATION -->
+        {% if pagination and pagination.pages > 1 %}
+        <nav aria-label="Page navigation" class="mt-5" data-aos="fade-up">
+            <ul class="pagination justify-content-center">
+                {% if pagination.has_prev %}
+                <li class="page-item">
+                    <a class="page-link bg-transparent border-secondary text-white"
+                        href="{{ url_for(request.endpoint, page=pagination.prev_num, **request.args) }}">Назад</a>
+                </li>
+                {% endif %}
+
+                {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                {% if page_num %}
+                {% if pagination.page == page_num %}
+                <li class="page-item active"><span class="page-link bg-accent border-accent text-white">{{ page_num
+                        }}</span></li>
+                {% else %}
+                <li class="page-item"><a class="page-link bg-transparent border-secondary text-white"
+                        href="{{ url_for(request.endpoint, page=page_num, **request.args) }}">{{ page_num }}</a>
+                </li>
+                {% endif %}
+                {% else %}
+                <li class="page-item disabled"><span
+                        class="page-link bg-transparent border-secondary text-white">…</span></li>
+                {% endif %}
+                {% endfor %}
+
+                {% if pagination.has_next %}
+                <li class="page-item">
+                    <a class="page-link bg-transparent border-secondary text-white"
+                        href="{{ url_for(request.endpoint, page=pagination.next_num, **request.args) }}">Вперёд</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+
+        <!-- SEO Text Block -->
+        <div class="mt-5 p-4 p-md-5 bg-card rounded-5 border border-secondary border-opacity-10" data-aos="fade-up">
+            <h2 class="h4 text-white mb-3">Надежные поставки: {{ title | lower }} из Китая</h2>
+            <p class="text-white opacity-75 small mb-0" style="line-height: 1.8;">
+                Компания «Турбо-ДВ» предлагает купить {{ title | lower }} с прямой доставкой от проверенных заводов и
+                дилеров.
+                Мы берем на себя полное юридическое сопровождение, профессиональную таможенную очистку в Благовещенске и
+                гарантийную доставку
+                в любую точку России. Наша техника проходит строгий контроль качества перед отправкой.
+                Оставьте заявку, чтобы получить индивидуальный расчет стоимости под ключ с учетом всех пошлин и
+                логистики.
+            </p>
+        </div>
+    </div>
+</section>
+
+<style>
+    .bg-card {
+        background-color: var(--bg-offset);
+    }
+
+    .text-accent {
+        color: var(--accent);
+    }
+
+    .border-dashed {
+        border-style: dashed !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+        border-width: 2px !important;
+    }
+</style>
+
+<script>
+    // Sort handler
+    function applySort(value) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('sort', value);
+        url.searchParams.delete('page'); // Reset page on sort change
+        window.location.href = url.toString();
+    }
+
+    // Remove individual filter tag
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.remove-tag').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const filterName = this.getAttribute('data-filter');
+                const url = new URL(window.location.href);
+                url.searchParams.delete(filterName);
+                url.searchParams.delete('page');
+                window.location.href = url.toString();
+            });
+        });
+    });
+</script>
+{% endblock %}

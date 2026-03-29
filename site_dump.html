@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авто из Китая под ключ | Turbo DV</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <img src="images/logo.jpg" alt="Turbo DV" class="logo">
+            <h1>Авто из Китая под ключ</h1>
+            
+            <div class="warning">
+                <span class="warning-icon">⚠️</span>
+                Цена зависит от курса юаня! Наличие авто и актуальную цену уточняйте у менеджера!
+            </div>
+            
+            <div class="year-badge">📅 Актуально 2026</div>
+        </header>
+
+        <!-- Cars Section -->
+        <section class="cars-section">
+            <h2 class="section-title">🔥 Подборка авто из Китая</h2>
+            <p style="text-align: center; color: #a0a0a0; margin-bottom: 30px;">
+                Реальные цены с таможней и доставкой в Благовещенск
+            </p>
+
+            <!-- Filter Buttons -->
+            <div class="filter-container">
+                <button class="filter-btn active" data-filter="all">
+                    🚗 Все авто
+                    <span class="filter-count">16</span>
+                </button>
+                <button class="filter-btn" data-filter="sedan">
+                    🚙 Седаны
+                    <span class="filter-count">6</span>
+                </button>
+                <button class="filter-btn" data-filter="crossover">
+                    🚕 Кроссоверы
+                    <span class="filter-count">6</span>
+                </button>
+                <button class="filter-btn" data-filter="hatchback">
+                    🚗 Хэтчбеки
+                    <span class="filter-count">4</span>
+                </button>
+            </div>
+
+            <!-- Results Info -->
+            <div class="results-info" id="resultsInfo">
+                Показано <span id="visibleCount">16</span> из <span id="totalCount">16</span> автомобилей
+            </div>
+
+            <div class="cars-grid">
+                <!-- Car Card 1 - Sedan -->
+                <div class="car-card" data-category="sedan">
+                    <img src="images/01_elantra.jpg" alt="Hyundai Elantra" class="car-image" data-lightbox>
+                    <div class="car-header">
+                        <div class="car-name">Hyundai Elantra (2021)</div>
+                        <div class="car-price">1 287 105 ₽</div>
+                    </div>
+                    <div class="car-specs">
+                        <div class="spec-item">Год: <span>2021</span></div>
+                        <div class="spec-item">Двигатель: <span>1.5 л</span></div>
+                        <div class="spec-item">Мощность: <span>115 л.с.</span></div>
+                        <div class="spec-item">Пробег: <span>69 000 км</span></div>
+                    </div>
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>Авто в Китае:</span>
+                            <span>937 105 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Таможня:</span>
+                            <span>250 000 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Документы:</span>
+                            <span>100 000 ₽</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Итого:</span>
+                            <span>1 287 105 ₽</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" data-car="Hyundai Elantra (2021)" data-price="1 287 105 ₽">Хочу такую же</button>
+                </div>
+
+                <!-- Car Card 2 - Hatchback -->
+                <div class="car-card" data-category="hatchback">
+                    <img src="images/02_fit.jpg" alt="Honda Fit" class="car-image" data-lightbox>
+                    <div class="car-header">
+                        <div class="car-name">Honda Fit (август 2021)</div>
+                        <div class="car-price">1 232 430 ₽</div>
+                    </div>
+                    <div class="car-specs">
+                        <div class="spec-item">Год: <span>2021</span></div>
+                        <div class="spec-item">Двигатель: <span>1.5 л</span></div>
+                        <div class="spec-item">Мощность: <span>130 л.с.</span></div>
+                        <div class="spec-item">Пробег: <span>20 000 км</span></div>
+                    </div>
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>Авто в Китае:</span>
+                            <span>882 430 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Таможня:</span>
+                            <span>250 000 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Документы:</span>
+                            <span>100 000 ₽</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Итого:</span>
+                            <span>1 232 430 ₽</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" data-car="Honda Fit (август 2021)" data-price="1 232 430 ₽">Хочу такую же</button>
+                </div>
+
+                <!-- Car Card 3 - Crossover -->
+                <div class="car-card" data-category="crossover">
+                    <img src="images/03_cx5.jpg" alt="Mazda CX-5" class="car-image" data-lightbox>
+                    <div class="car-header">
+                        <div class="car-name">Mazda CX-5 (март 2023)</div>
+                        <div class="car-price">2 320 000 ₽</div>
+                    </div>
+                    <div class="car-specs">
+                        <div class="spec-item">Год: <span>2023</span></div>
+                        <div class="spec-item">Двигатель: <span>2.0 л</span></div>
+                        <div class="spec-item">Мощность: <span>155 л.с.</span></div>
+                        <div class="spec-item">Пробег: <span>6 700 км</span></div>
+                    </div>
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>Авто в Китае:</span>
+                            <span>1 705 950 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Таможня:</span>
+                            <span>513 000 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Документы:</span>
+                            <span>100 000 ₽</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Итого:</span>
+                            <span>2 320 000 ₽</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" data-car="Mazda CX-5 (март 2023)" data-price="2 320 000 ₽">Хочу такую же</button>
+                </div>
+
+                <!-- Car Card 4 - Hatchback -->
+                <div class="car-card" data-category="hatchback">
+                    <img src="images/04_mini.jpg" alt="Mini Cooper" class="car-image" data-lightbox>
+                    <div class="car-header">
+                        <div class="car-name">Mini Cooper (2022)</div>
+                        <div class="car-price">3 319 245 ₽</div>
+                    </div>
+                    <div class="car-specs">
+                        <div class="spec-item">Год: <span>2022</span></div>
+                        <div class="spec-item">Двигатель: <span>1.5T</span></div>
+                        <div class="spec-item">Мощность: <span>136 л.с.</span></div>
+                        <div class="spec-item">Пробег: <span>53 000 км</span></div>
+                    </div>
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>Авто в Китае:</span>
+                            <span>2 969 245 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Таможня:</span>
+                            <span>250 000 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Документы:</span>
+                            <span>100 000 ₽</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Итого:</span>
+                            <span>3 319 245 ₽</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" data-car="Mini Cooper (2022)" data-price="3 319 245 ₽">Хочу такую же</button>
+                </div>
+
+                <!-- Car Card 5 - Crossover -->
+                <div class="car-card" data-category="crossover">
+                    <img src="images/05_m6.jpg" alt="Haval M6" class="car-image" data-lightbox>
+                    <div class="car-header">
+                        <div class="car-name">Haval M6 (октябрь 2021)</div>
+                        <div class="car-price">1 297 750 ₽</div>
+                    </div>
+                    <div class="car-specs">
+                        <div class="spec-item">Год: <span>2021</span></div>
+                        <div class="spec-item">Двигатель: <span>1.5 л</span></div>
+                        <div class="spec-item">Мощность: <span>143 л.с.</span></div>
+                        <div class="spec-item">Пробег: <span>30 454 км</span></div>
+                    </div>
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>Авто в Китае:</span>
+                            <span>947 750 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Таможня:</span>
+                            <span>250 000 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Документы:</span>
+                            <span>100 000 ₽</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Итого:</span>
+                            <span>1 297 750 ₽</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" data-car="Haval M6 (октябрь 2021)" data-price="1 297 750 ₽">Хочу такую же</button>
+                </div>
+
+                <!-- Car Card 6 - Sedan -->
+                <div class="car-card" data-category="sedan">
+                    <img src="images/06_levin.jpg" alt="Toyota Levin" class="car-image" data-lightbox>
+                    <div class="car-header">
+                        <div class="car-name">Toyota Levin (2021)</div>
+                        <div class="car-price">1 175 100 ₽</div>
+                    </div>
+                    <div class="car-specs">
+                        <div class="spec-item">Год: <span>2021</span></div>
+                        <div class="spec-item">Двигатель: <span>1.5 л</span></div>
+                        <div class="spec-item">Мощность: <span>121 л.с.</span></div>
+                        <div class="spec-item">Пробег: <span>39 719 км</span></div>
+                    </div>
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>Авто в Китае:</span>
+                            <span>825 100 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Таможня:</span>
+                            <span>250 000 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Документы:</span>
+                            <span>100 000 ₽</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Итого:</span>
+                            <span>1 175 100 ₽</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" data-car="Toyota Levin (2021)" data-price="1 175 100 ₽">Хочу такую же</button>
+                </div>
+
+                <!-- Car Card 7 - Crossover -->
+                <div class="car-card" data-category="crossover">
+                    <img src="images/07_q3.jpg" alt="AUDI Q3" class="car-image" data-lightbox>
+                    <div class="car-header">
+                        <div class="car-name">AUDI Q3 35TFSI S Line (февраль 2022)</div>
+                        <div class="car-price">2 568 850 ₽</div>
+                    </div>
+                    <div class="car-specs">
+                        <div class="spec-item">Год: <span>2022</span></div>
+                        <div class="spec-item">Двигатель: <span>1.4T</span></div>
+                        <div class="spec-item">Мощность: <span>150 л.с.</span></div>
+                        <div class="spec-item">Пробег: <span>58 000 км</span></div>
+                    </div>
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>Авто в Китае:</span>
+                            <span>2 218 850 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Таможня:</span>
+                            <span>250 000 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Документы:</span>
+                            <span>100 000 ₽</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Итого:</span>
+                            <span>2 568 850 ₽</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" data-car="AUDI Q3 35TFSI S Line (февраль 2022)" data-price="2 568 850 ₽">Хочу такую же</button>
+                </div>
+
+                <!-- Car Card 8 - Crossover -->
+                <div class="car-card" data-category="crossover">
+                    <img src="images/08_xrv.jpg" alt="Honda XR-V" class="car-image" data-lightbox>
+                    <div class="car-header">
+                        <div class="car-name">Honda XR-V (2023)</div>
+                        <div class="car-price">2 111 700 ₽</div>
+                    </div>
+                    <div class="car-specs">
+                        <div class="spec-item">Год: <span>2023</span></div>
+                        <div class="spec-item">Двигатель: <span>1.5 л</span></div>
+                        <div class="spec-item">Мощность: <span>124 л.с.</span></div>
+                        <div class="spec-item">Пробег: <span>8 870 км</span></div>
+                    </div>
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>Авто в Китае:</span>
+                            <span>1 761 700 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Таможня:</span>
+                            <span>250 000 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Документы:</span>
+                            <span>100 000 ₽</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Итого:</span>
+                            <span>2 111 700 ₽</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" data-car="Honda XR-V (2023)" data-price="2 111 700 ₽">Хочу такую же</button>
+                </div>
+
+                <!-- Car Card 9 - Sedan -->
+                <div class="car-card" data-category="sedan">
+                    <img src="images/09_lamando_280.jpg" alt="VW Lamando 280" class="car-image" data-lightbox>
+                    <div class="car-header">
+                        <div class="car-name">VOLKSWAGEN Lamando 280 TSI (февраль 2023)</div>
+                        <div class="car-price">1 877 550 ₽</div>
+                    </div>
+                    <div class="car-specs">
+                        <div class="spec-item">Год: <span>2023</span></div>
+                        <div class="spec-item">Двигатель: <span>1.4T</span></div>
+                        <div class="spec-item">Мощность: <span>150 л.с.</span></div>
+                        <div class="spec-item">Пробег: <span>29 000 км</span></div>
+                    </div>
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>Авто в Китае:</span>
+                            <span>1 527 550 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Таможня:</span>
+                            <span>250 000 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Документы:</span>
+                            <span>100 000 ₽</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Итого:</span>
+                            <span>1 877 550 ₽</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" data-car="VOLKSWAGEN Lamando 280 TSI (февраль 2023)" data-price="1 877 550 ₽">Хочу такую же</button>
+                </div>
+
+                <!-- Car Card 10 - Sedan - IN STOCK -->
+                <div class="car-card in-stock" data-category="sedan">
+                    <img src="images/10_lamando_230.jpg" alt="VW Lamando 230" class="car-image" data-lightbox>
+                    <div class="stock-badge">🔥 Машина в наличии на границе РФ!</div>
+                    <div class="car-header">
+                        <div class="car-name">VOLKSWAGEN Lamando 230 TSI DSG Fashion (май 2022)</div>
+                        <div class="car-price">1 180 000 ₽</div>
+                    </div>
+                    <div class="car-specs">
+                        <div class="spec-item">Год: <span>2022</span></div>
+                        <div class="spec-item">Двигатель: <span>1.4T</span></div>
+                        <div class="spec-item">Мощность: <span>131 л.с.</span></div>
+                        <div class="spec-item">Пробег: <span>41 236 км</span></div>
+                    </div>
+                    <div class="price-breakdown">
+                        <div class="price-row total">
+                            <span>Итого в Благовещенске:</span>
+                            <span>1 180 000 ₽</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-success" data-car="VOLKSWAGEN Lamando 230 TSI DSG Fashion (май 2022)" data-price="1 180 000 ₽">Забронировать</button>
+                </div>
+
+                <!-- Car Card 11 - Crossover -->
+                <div class="car-card" data-category="crossover">
+                    <img src="images/11_geely.jpg" alt="Geely Vision X6" class="car-image" data-lightbox>
+                    <div class="car-header">
+                        <div class="car-name">Geely Vision X6 PRO Premium (февраль 2023)</div>
+                        <div class="car-price">1 495 000 ₽</div>
+                    </div>
+                    <div class="car-specs">
+                        <div class="spec-item">Год: <span>2023</span></div>
+                        <div class="spec-item">Двигатель: <span>1.5T</span></div>
+                        <div class="spec-item">Мощность: <span>150 л.с.</span></div>
+                        <div class="spec-item">Пробег: <span>14 000 км</span></div>
+                    </div>
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>Авто в Китае:</span>
+                            <span>1 245 000 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Таможня:</span>
+                            <span>150 000 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Документы:</span>
+                            <span>100 000 ₽</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Итого:</span>
+                            <span>1 495 000 ₽</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" data-car="Geely Vision X6 PRO Premium (февраль 2023)" data-price="1 495 000 ₽">Хочу такую же</button>
+                </div>
+
+                <!-- Car Card 12 - Sedan -->
+                <div class="car-card" data-category="sedan">
+                    <img src="images/12_corolla.jpg" alt="Toyota Corolla" class="car-image" data-lightbox>
+                    <div class="car-header">
+                        <div class="car-name">Toyota Corolla 1.5 CVT TNGA Elite (июнь 2021)</div>
+                        <div class="car-price">1 354 500 ₽</div>
+                    </div>
+                    <div class="car-specs">
+                        <div class="spec-item">Год: <span>2021</span></div>
+                        <div class="spec-item">Двигатель: <span>1.5 л</span></div>
+                        <div class="spec-item">Мощность: <span>120 л.с.</span></div>
+                        <div class="spec-item">Пробег: <span>32 000 км</span></div>
+                    </div>
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>Авто в Китае:</span>
+                            <span>1 104 500 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Таможня:</span>
+                            <span>150 000 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Документы:</span>
+                            <span>100 000 ₽</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Итого:</span>
+                            <span>1 354 500 ₽</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" data-car="Toyota Corolla 1.5 CVT TNGA Elite (июнь 2021)" data-price="1 354 500 ₽">Хочу такую же</button>
+                </div>
+
+                <!-- Car Card 13 - Hatchback -->
+                <div class="car-card" data-category="hatchback">
+                    <img src="images/13_a180.jpg" alt="Mercedes-Benz A180" class="car-image" data-lightbox>
+                    <div class="car-header">
+                        <div class="car-name">Mercedes-Benz A180 (март 2023)</div>
+                        <div class="car-price">2 133 480 ₽</div>
+                    </div>
+                    <div class="car-specs">
+                        <div class="spec-item">Год: <span>2023</span></div>
+                        <div class="spec-item">Двигатель: <span>1.3T</span></div>
+                        <div class="spec-item">Мощность: <span>136 л.с.</span></div>
+                        <div class="spec-item">Пробег: <span>32 000 км</span></div>
+                    </div>
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>Авто в Китае:</span>
+                            <span>1 815 480 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Таможня:</span>
+                            <span>218 000 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Документы:</span>
+                            <span>100 000 ₽</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Итого:</span>
+                            <span>2 133 480 ₽</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" data-car="Mercedes-Benz A180 (март 2023)" data-price="2 133 480 ₽">Хочу такую же</button>
+                </div>
+
+                <!-- Car Card 14 - Hatchback -->
+                <div class="car-card" data-category="hatchback">
+                    <img src="images/14_golf.jpg" alt="VW Golf" class="car-image" data-lightbox>
+                    <div class="car-header">
+                        <div class="car-name">VOLKSWAGEN Golf R-Line (апрель 2021)</div>
+                        <div class="car-price">1 726 250 ₽</div>
+                    </div>
+                    <div class="car-specs">
+                        <div class="spec-item">Год: <span>2021</span></div>
+                        <div class="spec-item">Двигатель: <span>1.4T</span></div>
+                        <div class="spec-item">Мощность: <span>140 л.с.</span></div>
+                        <div class="spec-item">Пробег: <span>26 207 км</span></div>
+                    </div>
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>Авто в Китае:</span>
+                            <span>1 386 250 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Таможня:</span>
+                            <span>240 000 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Документы:</span>
+                            <span>100 000 ₽</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Итого:</span>
+                            <span>1 726 250 ₽</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" data-car="VOLKSWAGEN Golf R-Line (апрель 2021)" data-price="1 726 250 ₽">Хочу такую же</button>
+                </div>
+
+                <!-- Car Card 15 - Crossover -->
+                <div class="car-card" data-category="crossover">
+                    <img src="images/15_audiq335tfsi.jpg" alt="AUDI Q3 2022" class="car-image" data-lightbox>
+                    <div class="car-header">
+                        <div class="car-name">AUDI Q3 35TFSI (2022)</div>
+                        <div class="car-price">2 550 000 ₽</div>
+                    </div>
+                    <div class="car-specs">
+                        <div class="spec-item">Год: <span>2022</span></div>
+                        <div class="spec-item">Двигатель: <span>1.4T</span></div>
+                        <div class="spec-item">Мощность: <span>150 л.с.</span></div>
+                        <div class="spec-item">Пробег: <span>47 000 км</span></div>
+                    </div>
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>Авто в Китае:</span>
+                            <span>2 210 000 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Таможня:</span>
+                            <span>240 000 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Документы:</span>
+                            <span>100 000 ₽</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Итого:</span>
+                            <span>2 550 000 ₽</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" data-car="AUDI Q3 35TFSI (2022)" data-price="2 550 000 ₽">Хочу такую же</button>
+                </div>
+
+                <!-- Car Card 16 - Sedan -->
+                <div class="car-card" data-category="sedan">
+                    <img src="images/16_benzc200l.jpg" alt="Mercedes-Benz C200L" class="car-image" data-lightbox>
+                    <div class="car-header">
+                        <div class="car-name">Mercedes-Benz C200L (2021)</div>
+                        <div class="car-price">2 700 000 ₽</div>
+                    </div>
+                    <div class="car-specs">
+                        <div class="spec-item">Год: <span>2021</span></div>
+                        <div class="spec-item">Двигатель: <span>1.5T</span></div>
+                        <div class="spec-item">Мощность: <span>156 л.с.</span></div>
+                        <div class="spec-item">Пробег: <span>46 000 км</span></div>
+                    </div>
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>Авто в Китае:</span>
+                            <span>2 350 000 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Таможня:</span>
+                            <span>250 000 ₽</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Документы:</span>
+                            <span>100 000 ₽</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Итого:</span>
+                            <span>2 700 000 ₽</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" data-car="Mercedes-Benz C200L (2021)" data-price="2 700 000 ₽">Хочу такую же</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Custom Request Section -->
+        <section class="custom-request">
+            <h2>💰 Не нашли нужную модель?</h2>
+            <p>Рассчитаем стоимость любого авто из Китая под ваш бюджет!</p>
+            <button class="btn btn-primary btn-large" data-car="Индивидуальный подбор" data-price="По запросу">Рассчитать стоимость</button>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-info">
+                <strong>Turbo DV</strong> • Официальная поставка • Договор • Благовещенск<br>
+                Поставка в любой город!
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal Form -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <button class="modal-close" id="modalClose">&times;</button>
+            
+            <div id="modalForm">
+                <h3 class="modal-title">📋 Оставьте заявку</h3>
+                <p class="modal-subtitle">Менеджер свяжется с вами в течение 15 минут</p>
+                
+                <div class="selected-car" id="selectedCarInfo">
+                    <div class="selected-car-name" id="selectedCarName">-</div>
+                    <div class="selected-car-price" id="selectedCarPrice">-</div>
+                </div>
+                
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Ваше имя *</label>
+                        <input type="text" id="name" name="name" placeholder="Иван Иванов" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Телефон *</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+7 (999) 000-00-00" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email (необязательно)</label>
+                        <input type="email" id="email" name="email" placeholder="example@mail.ru">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="comment">Комментарий</label>
+                        <input type="text" id="comment" name="comment" placeholder="Дополнительная информация">
+                    </div>
+                    
+                    <button type="submit" class="form-submit" id="submitBtn">
+                        <span id="submitText">Отправить заявку</span>
+                    </button>
+                    
+                    <p class="form-note">🔒 Ваши данные защищены и не будут переданы третьим лицам</p>
+                </form>
+            </div>
+            
+            <div class="success-message" id="successMessage">
+                <div class="success-icon">✅</div>
+                <h3 class="success-title">Заявка отправлена!</h3>
+                <p class="success-text">
+                    Спасибо за вашу заявку!<br>
+                    Наш менеджер свяжется с вами в течение 15 минут<br>
+                    для уточнения деталей.
+                </p>
+            </div>
+
+            <div class="error-message" id="errorMessage">
+                <div class="error-icon">❌</div>
+                <h3 class="error-title">Ошибка отправки</h3>
+                <p class="error-text">
+                    Не удалось отправить заявку.<br>
+                    Пожалуйста, попробуйте ещё раз<br>
+                    или позвоните нам напрямую.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox for Images -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightboxClose">&times;</button>
+        <img src="" alt="Car Full Size" class="lightbox-img" id="lightboxImg">
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

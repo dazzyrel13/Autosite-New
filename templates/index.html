@@ -1,0 +1,346 @@
+{% extends "base.html" %}
+
+{% block title %}Турбо-ДВ (Turbo-DV) — Автомобили и спецтехника нового поколения{% endblock %}
+{% block meta %}
+<meta name="description"
+    content="Турбо-ДВ (Turbo-DV) — ваш надежный партнер в поставке автомобилей и спецтехники напрямую из Китая. Гарантия качества, прозрачные цены и быстрая доставка по всей России.">
+<meta name="keywords"
+    content="автомобили из китая, спецтехника, тягачи, самосвалы, купить авто благовещенск, турбо-дв, turbo-dv, turbodv">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "AutoDealer",
+  "name": "Турбо-ДВ (Turbo-DV)",
+  "url": "{{ url_for('index', _external=True) }}",
+  "logo": "{{ url_for('static', filename='logo_emblem.webp', _external=True) }}",
+  "image": "{{ url_for('static', filename='logo_emblem.webp', _external=True) }}",
+  "telephone": "8 (800) 250-91-51",
+  "email": "Turbo.dv@yandex.ru",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Ленина 106",
+    "addressLocality": "Благовещенск",
+    "addressRegion": "Амурская область",
+    "addressCountry": "RU"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "8 (800) 250-91-51",
+    "contactType": "customer service"
+  }
+}
+</script>
+{% endblock %}
+
+
+{% block content %}
+<div class="fluid-overlay"></div>
+<!-- Super Modern Hero -->
+<section class="hero d-flex align-items-center position-relative" style="min-height: 80vh; padding-top: 140px;">
+    <!-- Background Image with Overlay -->
+    <div class="hero-bg-image" style="background-image: url('{{ url_for("static", filename="lexus_hero.webp") }}');">
+    </div>
+    <div class="hero-overlay"></div>
+
+    <div class="container text-start position-relative" style="z-index: 2;">
+        <div class="row align-items-center">
+            <div class="col-lg-8" data-aos="fade-right">
+                <span
+                    class="badge border border-accent text-accent mb-4 py-2 px-3 rounded-pill fw-bold text-uppercase d-inline-block mw-100 text-wrap"
+                    style="letter-spacing: 2px; font-size: 0.65rem; background: var(--accent-glow); box-shadow: 0 0 15px var(--accent-glow); line-height: 1.4; max-width: 280px;">
+                    <i class="bi bi-gem me-1"></i> ПРЕМИАЛЬНОЕ КАЧЕСТВО
+                </span>
+                <h1 class="display-3 fw-bold text-white lh-1">Находим лучшее <br>для <span class="text-accent">ВАС</span></h1>
+                <p class="fs-5 opacity-75 mt-4">Мы поставляем автомобили, которые делают жизнь
+                    комфортней!<br>Прямые поставки, честные цены, юридическая прозрачность, быстрая доставка!</p>
+                <div class="d-flex flex-wrap gap-3 mt-5">
+                    <a href="{{ url_for('cars') }}" class="btn btn-primary-custom px-5">Смотреть каталог</a>
+                    <a href="{{ url_for('contact') }}" class="btn btn-outline-custom p-4">Консультация</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% include 'components/deep_search_form.html' %}
+
+<!-- Brand Marquee -->
+<div class="py-4 border-top border-bottom overflow-hidden position-relative"
+    style="background: var(--primary); border-color: rgba(255,255,255,0.05) !important;">
+
+    <!-- Cyber Line Deco -->
+    <div class="position-absolute w-100 top-0 start-0"
+        style="height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.5;">
+    </div>
+
+    <div class="brand-marquee">
+        <div class="marquee-group">
+            <span class="fw-800 text-uppercase h4 mb-0 text-white opacity-25">Lexus</span>
+            <span class="fw-800 text-uppercase h4 mb-0 text-white opacity-25">Geely</span>
+            <span class="fw-800 text-uppercase h4 mb-0 text-white opacity-25">Audi</span>
+            <span class="fw-800 text-uppercase h4 mb-0 text-white opacity-25">Mazda</span>
+            <span class="fw-800 text-uppercase h4 mb-0 text-white opacity-25">Mercedes-Benz</span>
+            <span class="fw-800 text-uppercase h4 mb-0 text-white opacity-25">Hyundai</span>
+            <span class="fw-800 text-uppercase h4 mb-0 text-white opacity-25">Toyota</span>
+            <span class="fw-800 text-uppercase h4 mb-0 text-white opacity-25">Volkswagen</span>
+            <span class="fw-800 text-uppercase h4 mb-0 text-white opacity-25">Honda</span>
+            <span class="fw-800 text-uppercase h4 mb-0 text-white opacity-25">Haval</span>
+            <img src="{{ url_for('static', filename='images/dragon_car.webp') }}" class="marquee-car" alt="Dragon Truck"
+                loading="lazy">
+            <span class="fw-800 text-uppercase h4 mb-0 text-white opacity-25">Mini Cooper</span>
+        </div>
+        <div class="marquee-group">
+            <span class="fw-800 text-uppercase h4 mb-0 text-white opacity-25">Lexus</span>
+            <span class="fw-800 text-uppercase h4 mb-0 text-white opacity-25">Geely</span>
+            <span class="fw-800 text-uppercase h4 mb-0 text-white opacity-25">Audi</span>
+            <span class="fw-800 text-uppercase h4 mb-0 text-white opacity-25">Mazda</span>
+            <span class="fw-800 text-uppercase h4 mb-0 text-white opacity-25">Mercedes-Benz</span>
+            <span class="fw-800 text-uppercase h4 mb-0 text-white opacity-25">Hyundai</span>
+            <span class="fw-800 text-uppercase h4 mb-0 text-white opacity-25">Toyota</span>
+            <span class="fw-800 text-uppercase h4 mb-0 text-white opacity-25">Volkswagen</span>
+            <span class="fw-800 text-uppercase h4 mb-0 text-white opacity-25">Honda</span>
+            <span class="fw-800 text-uppercase h4 mb-0 text-white opacity-25">Haval</span>
+            <img src="{{ url_for('static', filename='images/dragon_car.webp') }}" class="marquee-car" alt="Dragon Truck"
+                loading="lazy">
+            <span class="fw-800 text-uppercase h4 mb-0 text-white opacity-25">Mini Cooper</span>
+        </div>
+    </div>
+</div>
+
+<!-- Trust / Stats Section -->
+<section class="py-5" style="background: transparent;">
+    <div class="container">
+        <div class="row g-4 text-center">
+            <div class="col-md-3" data-aos="fade-up" data-aos-delay="100">
+                <div class="p-4">
+                    <h2 class="fw-bold mb-1" style="color: var(--accent);">500+</h2>
+                    <p class="text-white opacity-75 small text-uppercase fw-bold">Машин поставлено</p>
+                </div>
+            </div>
+            <div class="col-md-3" data-aos="fade-up" data-aos-delay="200">
+                <div class="p-4">
+                    <h2 class="fw-bold mb-1" style="color: var(--accent);">10 лет</h2>
+                    <p class="text-white opacity-75 small text-uppercase fw-bold">Надежной работы</p>
+                </div>
+            </div>
+            <div class="col-md-3" data-aos="fade-up" data-aos-delay="300">
+                <div class="p-4">
+                    <h2 class="fw-bold mb-1" style="color: var(--accent);">24/7</h2>
+                    <p class="text-white opacity-75 small text-uppercase fw-bold">Поддержка клиентов</p>
+                </div>
+            </div>
+            <div class="col-md-3" data-aos="fade-up" data-aos-delay="400">
+                <div class="p-4">
+                    <h2 class="fw-bold mb-1" style="color: var(--accent);">100%</h2>
+                    <p class="text-white opacity-75 small text-uppercase fw-bold">Юридическая чистота</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Popular Section -->
+<section class="vehicles-section py-5" style="background: transparent;">
+    <div class="container">
+        <div class="row align-items-center mb-5" data-aos="fade-up">
+            <div class="col-lg-8">
+                <span class="text-accent fw-bold text-uppercase small" style="letter-spacing: 2px;">Выбор месяца</span>
+                <h2 class="mt-2 text-white">Популярные модели</h2>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                <a href="{{ url_for('cars') }}" class="btn btn-outline-light rounded-pill px-4">Весь каталог</a>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            {% for vehicle in featured %}
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                {% include 'components/vehicle_card.html' %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Categories Modern Grid -->
+<section class="py-5" style="background-color: transparent;">
+    <div class="container">
+        <div class="section-title text-center mb-5" data-aos="fade-up">
+            <h2 class="text-white">Направления</h2>
+            <p class="text-white opacity-50">Техника для любых задач — от города до карьера</p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            <!-- Cars -->
+            <div class="col-md-4">
+                <div class="vehicle-card direction-card" style="border-radius: 28px;">
+                    <div class="direction-image h-100 position-relative">
+                        <img src="{{ url_for('static', filename='images/car_placeholder.webp') }}"
+                            class="w-100 h-100 object-fit-cover" alt="Cars" style="filter: brightness(0.6);"
+                            loading="lazy">
+                        <div class="position-absolute bottom-0 start-0 w-100 p-4 p-md-5 bg-gradient-v">
+                            <h3 class="h2 fw-bold text-white mb-3">Легковые</h3>
+                            <a href="{{ url_for('cars') }}" class="btn btn-primary-custom py-3 px-4 rounded-4 w-100">В
+                                каталог</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Trucks -->
+            <div class="col-md-4">
+                <div class="vehicle-card direction-card" style="border-radius: 28px;">
+                    <div class="direction-image h-100 position-relative">
+                        <img src="{{ url_for('static', filename='images/truck_placeholder.webp') }}"
+                            class="w-100 h-100 object-fit-cover" alt="Trucks" style="filter: brightness(0.6);"
+                            loading="lazy">
+                        <div class="position-absolute bottom-0 start-0 w-100 p-4 p-md-5 bg-gradient-v">
+                            <h3 class="h2 fw-bold text-white mb-3">Грузовые</h3>
+                            <a href="{{ url_for('trucks') }}" class="btn btn-primary-custom py-3 px-4 rounded-4 w-100">В
+                                каталог</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Special Equipment -->
+            <div class="col-md-4">
+                <div class="vehicle-card direction-card" style="border-radius: 28px;">
+                    <div class="direction-image h-100 position-relative">
+                        <img src="{{ url_for('static', filename='images/special_placeholder.webp') }}"
+                            class="w-100 h-100 object-fit-cover" alt="Special" style="filter: brightness(0.6);"
+                            loading="lazy">
+                        <div class="position-absolute bottom-0 start-0 w-100 p-4 p-md-5 bg-gradient-v">
+                            <h3 class="h2 fw-bold text-white mb-3">Спецтехника</h3>
+                            <a href="{{ url_for('special') }}"
+                                class="btn btn-primary-custom py-3 px-4 rounded-4 w-100">В каталог</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Reviews Section -->
+<section class="py-5 position-relative"
+    style="background: transparent; overflow: hidden; border-top: 1px solid var(--glass-border);">
+    <div class="fluid-overlay" style="opacity: 0.15;"></div>
+    <div class="container py-5 position-relative z-2">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-5" data-aos="fade-up">
+            <div>
+                <span class="text-accent fw-bold text-uppercase small" style="letter-spacing: 2px;">Доверие
+                    клиентов</span>
+                <h2 class="display-5 fw-bold text-white mt-2">Отзывы 2ГИС</h2>
+            </div>
+            <a href="https://2gis.ru/blagoveshensk/firm/70000001094699294/tab/reviews?m=127.539419%2C50.256602%2F16" target="_blank" rel="noopener noreferrer" class="btn btn-outline-custom rounded-pill mt-4 mt-md-0 px-4">
+                <i class="bi bi-star-fill text-warning me-2"></i>Читать все на 2ГИС
+            </a>
+        </div>
+
+        <div class="row g-4">
+            {% for review in reviews %}
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                <div class="card glass h-100 rounded-5 p-4 p-md-5"
+                    style="transition: transform 0.3s; box-shadow: var(--card_shadow);">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-accent bg-opacity-10 text-accent rounded-circle d-flex align-items-center justify-content-center me-3"
+                                style="width: 50px; height: 50px; flex-shrink: 0;">
+                                <span class="fw-bold fs-5">{{ review.author_name[0] | upper }}</span>
+                            </div>
+                            <div>
+                                <h5 class="text-white mb-0 fw-bold">{{ review.author_name }}</h5>
+                                <span class="text-white opacity-50 small"><i class="bi bi-geo-alt me-1"></i>{{
+                                    review.source }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex mb-3">
+                        {% for _ in range(review.rating) %}
+                        <i class="bi bi-star-fill text-warning me-1" style="font-size: 0.9rem;"></i>
+                        {% endfor %}
+                        {% for _ in range(5 - review.rating) %}
+                        <i class="bi bi-star text-white opacity-25 me-1" style="font-size: 0.9rem;"></i>
+                        {% endfor %}
+                    </div>
+
+                    <div class="review-content position-relative mb-2">
+                        <p class="review-text text-white opacity-75 fst-italic mb-0" 
+                           style="line-height: 1.6; max-height: 110px; overflow: hidden; transition: max-height 0.4s ease;">
+                            "{{ review.text }}"
+                        </p>
+                        <div class="review-fade" 
+                             style="position: absolute; bottom: 0; left: 0; width: 100%; height: 40px; 
+                                    background: linear-gradient(transparent, #0a0101); pointer-events: none; transition: 0.3s; opacity: 1;"></div>
+                    </div>
+                    <button class="btn btn-link text-accent p-0 mb-4 small text-decoration-none read-more-btn d-none" 
+                            style="font-size: 0.85rem;"
+                            onclick="toggleReview(this)">
+                        Читать полностью...
+                    </button>
+                    {% if review.vehicle_model %}
+                    <div class="mt-auto pt-3 border-top border-secondary border-opacity-25">
+                        <span class="badge bg-secondary text-white rounded-pill px-3 py-2 fw-normal">
+                            <i class="bi bi-car-front me-2 text-accent"></i>Приобретен: {{ review.vehicle_model }}
+                        </span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% else %}
+            <div class="col-12 py-5 text-center glass rounded-5">
+                <i class="bi bi-chat-quote display-4 text-white opacity-25 mb-3"></i>
+                <p class="text-white opacity-50 mb-0">Отзывы загружаются... Вскоре здесь появятся реальные истории наших
+                    клиентов.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Callback CTA -->
+<section class="py-5">
+    <div class="container" data-aos="flip-up">
+        <div class="glass rounded-5 p-5 text-white text-center shadow-lg" data-aos="zoom-in">
+            <h2 class="display-5 fw-bold mb-4">Нужна помощь в подборе?</h2>
+            <p class="lead mb-5 opacity-75">Наши эксперты помогут найти идеальный вариант под ваш бюджет и задачи.</p>
+            <a href="{{ url_for('contact') }}" class="btn btn-light btn-lg px-5 py-3 rounded-pill fw-bold"
+                style="color: var(--primary);">Обсудить задачу</a>
+        </div>
+    </div>
+</section>
+
+<script>
+function toggleReview(btn) {
+    const container = btn.previousElementSibling;
+    const text = container.querySelector('.review-text');
+    const fade = container.querySelector('.review-fade');
+    
+    if (text.classList.contains('expanded')) {
+        text.style.maxHeight = '110px';
+        text.classList.remove('expanded');
+        fade.style.opacity = '1';
+        btn.textContent = 'Читать полностью...';
+        btn.closest('.card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } else {
+        text.style.maxHeight = text.scrollHeight + 'px';
+        text.classList.add('expanded');
+        fade.style.opacity = '0';
+        btn.textContent = 'Свернуть';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        document.querySelectorAll('.review-text').forEach(text => {
+            if (text.scrollHeight > 115) {
+                text.parentElement.nextElementSibling.classList.remove('d-none');
+            } else {
+                const fade = text.parentElement.querySelector('.review-fade');
+                if (fade) fade.style.display = 'none';
+            }
+        });
+    }, 500);
+});
+</script>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Доставка техники — Турбо-ДВ{% endblock %}
+
+{% block content %}
+<div class="fluid-overlay"></div>
+<section class="py-5" style="background: transparent; padding-top: 160px !important;">
+    <div class="container py-5">
+        <div class="row align-items-center mb-5" data-aos="fade-up">
+            <div class="col-lg-7">
+                <span class="text-accent fw-bold text-uppercase small" style="letter-spacing: 2px;">Логистика без
+                    границ</span>
+                <h1 class="display-4 fw-bold text-white mt-1 mb-4">Доставим до вашего <br><span
+                        class="text-accent">города</span></h1>
+                <p class="text-white opacity-75 fs-5">Турбо-ДВ организует безопасную доставку автомобилей и спецтехники
+                    из Китая в любую точку России.</p>
+
+                <div class="row g-4 mt-4">
+                    <div class="col-md-6" data-aos="fade-right">
+                        <div class="bg-card p-4 rounded-4 border border-secondary border-opacity-10 h-100">
+                            <i class="bi bi-truck text-accent fs-1 mb-3 d-block"></i>
+                            <h4 class="text-white">Автовозы и тралы</h4>
+                            <p class="text-white opacity-75 small">Надежная перевозка легковых авто и тяжелой техники на
+                                специализированных прицепах.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6" data-aos="fade-left">
+                        <div class="bg-card p-4 rounded-4 border border-secondary border-opacity-10 h-100">
+                            <i class="bi bi-geo-alt text-accent fs-1 mb-3 d-block"></i>
+                            <h4 class="text-white">Отслеживание 24/7</h4>
+                            <p class="text-white opacity-75 small">Полный контроль местоположения вашего груза на каждом
+                                этапе пути.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 text-center d-none d-lg-block">
+                <div class="bg-accent-soft p-5 rounded-circle shadow-lg d-inline-block">
+                    <i class="bi bi-globe-central-south-asia text-accent" style="font-size: 8rem;"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5 p-5 bg-card rounded-5 text-center shadow-lg border border-accent border-opacity-10"
+            data-aos="zoom-in">
+            <h3 class="text-white mb-4">Интересует стоимость доставки?</h3>
+            <p class="text-white opacity-75 mb-5 mx-auto" style="max-width: 600px;">Стоимость рассчитывается
+                индивидуально в зависимости от габаритов техники и конечного пункта назначения.</p>
+            <a href="{{ url_for('contact') }}" class="btn btn-primary-custom px-5 py-3">Рассчитать доставку</a>
+        </div>
+    </div>
+</section>
+
+<style>
+    .bg-card {
+        background-color: var(--bg-offset);
+    }
+
+    .text-accent {
+        color: var(--accent);
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Растаможка и оформление — Турбо-ДВ{% endblock %}
+
+{% block content %}
+<div class="fluid-overlay"></div>
+<section class="py-5" style="background: transparent; padding-top: 160px !important;">
+    <div class="container py-5">
+        <div class="row align-items-center mb-5" data-aos="fade-up">
+            <div class="col-lg-7">
+                <span class="text-accent fw-bold text-uppercase small" style="letter-spacing: 2px;">Юридическая
+                    чистота</span>
+                <h1 class="display-4 fw-bold text-white mt-1 mb-4">Белая растаможка <br><span class="text-accent">без
+                        сюрпризов</span></h1>
+                <p class="text-white opacity-75 fs-5 mb-5">Турбо-ДВ берет на себя все сложности таможенного оформления.
+                    Мы гарантируем 100% юридическую корректность всех документов.</p>
+
+                <div class="row g-4 mt-4">
+                    <div class="col-md-6" data-aos="fade-right">
+                        <div class="bg-card p-4 rounded-4 border border-secondary border-opacity-10 h-100">
+                            <i class="bi bi-file-earmark-check text-accent fs-1 mb-3 d-block"></i>
+                            <h4 class="text-white">Полный пакет ПТС/ЭПТС</h4>
+                            <p class="text-white opacity-75 small">Вы получаете технику, полностью готовую к постановке
+                                на учет в ГИБДД.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6" data-aos="fade-left">
+                        <div class="bg-card p-4 rounded-4 border border-secondary border-opacity-10 h-100">
+                            <i class="bi bi-shield-check text-accent fs-1 mb-3 d-block"></i>
+                            <h4 class="text-white">Без скрытых платежей</h4>
+                            <p class="text-white opacity-75 small">Цена в договоре окончательна. Мы фиксируем все
+                                таможенные расходы заранее.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 text-center d-none d-lg-block">
+                <div class="bg-accent-soft p-5 rounded-circle shadow-lg d-inline-block">
+                    <i class="bi bi-file-earmark-lock-fill text-accent" style="font-size: 8rem;"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5 p-5 bg-card rounded-5 text-center shadow-lg border border-accent border-opacity-10"
+            data-aos="zoom-in">
+            <h3 class="text-white mb-4">Нужна помощь эксперта?</h3>
+            <p class="text-white opacity-75 mb-5 mx-auto" style="max-width: 600px;">Позвольте профессионалам Турбо-ДВ
+                заняться бумажной работой, пока вы планируете работу вашей новой техники.</p>
+            <a href="{{ url_for('contact') }}" class="btn btn-primary-custom px-5 py-3">Оставить заявку</a>
+        </div>
+    </div>
+</section>
+
+<style>
+    .bg-card {
+        background-color: var(--bg-offset);
+    }
+
+    .text-accent {
+        color: var(--accent);
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  # Основной сервис приложения Flask
+  web:
+    build: .
+    container_name: turbo_dv_web
+    restart: always
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=development
+      - DATABASE_URL=sqlite:///./instance/database.db
+    depends_on:
+      - redis
+
+  # Сервис Redis для кэширования (Flask-Caching)
+  redis:
+    image: redis:7-alpine
+    container_name: turbo_dv_redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+# Общие тома данных (если понадобятся для БД отдельно)
+volumes:
+  sqlite_data:

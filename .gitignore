@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+venv/
+.env
+
+# IDE
+.idea/
+.vscode/
+.continue/
+.gigaide/
+
+# Binary tools (should not be in repo)
+*.exe
+*.zip
+bore.exe
+bore.zip
+cloudflared.exe
+
+# Logs
+*.log
+access.log
+error.log
+
+# Database
+*.db
+
+# Temp files
+app.py.back
+output.txt
+output.html
+
+# OS files
+Thumbs.db
+.DS_Store

@@ -1,0 +1,98 @@
+.vehicle-detail-section {
+    background: transparent;
+    padding-top: 140px !important;
+}
+
+.vehicle-gallery-img {
+    height: 600px;
+    object-fit: cover;
+}
+
+.vehicle-detail-price {
+    font-size: 3rem;
+}
+
+@media (max-width: 768px) {
+    .vehicle-detail-section {
+        padding-top: 90px !important;
+    }
+
+    .vehicle-gallery-img {
+        height: 300px;
+    }
+
+    .vehicle-detail-price {
+        font-size: 2.2rem;
+    }
+
+    .display-5 {
+        font-size: 2rem !important;
+    }
+
+    .breadcrumb {
+        font-size: 0.85rem;
+        padding: 1rem !important;
+    }
+
+    /* Compact padding for cards on mobile */
+    .col-lg-7 .p-5,
+    .col-lg-5 .p-5 {
+        padding: 1.5rem !important;
+    }
+
+    .g-5 {
+        --bs-gutter-y: 1.5rem;
+    }
+}
+
+.bg-card {
+    background-color: var(--bg-offset);
+}
+
+.bg-accent-soft {
+    background-color: var(--accent-soft);
+}
+
+.text-accent {
+    color: var(--accent);
+}
+
+.line-height-1 {
+    line-height: 1;
+}
+
+/* Улучшение видимости полей формы */
+.form-control {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+}
+
+.form-floating label {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.form-floating>.form-control:focus~label,
+.form-floating>.form-control:not(:placeholder-shown)~label {
+    color: var(--accent) !important;
+    opacity: 1 !important;
+}
+
+.form-control:focus {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 0.25rem var(--accent-soft) !important;
+}
+
+/* Навигация (хлебные крошки) */
+.breadcrumb-item+.breadcrumb-item::before {
+    color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.hover-accent {
+    transition: var(--transition-smooth);
+}
+
+.hover-accent:hover {
+    color: var(--accent) !important;
+}

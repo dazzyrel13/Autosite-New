@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}О компании Турбо-ДВ — Ваша экспертность в спецтехнике{% endblock %}
+
+{% block content %}
+<div class="fluid-overlay"></div>
+
+<!-- Premium Hero Section -->
+<section class="hero d-flex align-items-center position-relative mb-5" style="min-height: 60vh; padding-top: 140px;">
+    <div class="hero-bg-image"
+        style="background-image: url('{{ url_for('static', filename='hero_car_bg.webp') }}'); opacity: 0.3;"></div>
+    <div class="hero-overlay"></div>
+
+    <div class="container text-start position-relative" style="z-index: 2;">
+        <div class="row align-items-center" data-aos="fade-up">
+            <div class="col-lg-7">
+                <span class="text-accent fw-bold text-uppercase small" style="letter-spacing: 2px;">Индивидуальный
+                    подход</span>
+                <h1 class="display-3 fw-bold text-white mt-3 mb-4">Надежный мост между <br><span
+                        class="text-accent">Китаем и вашей мечтой!</span></h1>
+                <p class="text-white fs-5 max-width-600">Турбо-ДВ это экспертная команда по подбору, доставке и оформлению легкового, коммерческого и спец. транспорта из Китая!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5" style="background: transparent; position: relative; z-index: 2;">
+    <div class="container">
+        <!-- Stats / Icons -->
+        <div class="row g-4 mb-5 pb-5">
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="bg-card p-5 rounded-5 border border-secondary border-opacity-10 text-center h-100">
+                    <div class="text-accent display-4 fw-bold mb-2">10+</div>
+                    <div class="text-white fw-bold h5">Лет на рынке</div>
+                    <p class="text-white small mt-2">Опыт, накопленный годами успешных поставок.</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="bg-card p-5 rounded-5 border border-secondary border-opacity-10 text-center h-100">
+                    <div class="text-accent display-4 fw-bold mb-2">500+</div>
+                    <div class="text-white fw-bold h5">Счастливых клиентов</div>
+                    <p class="text-white small mt-2">Нам доверяют как частные лица, так и крупные автопарки.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="bg-card p-5 rounded-5 border border-secondary border-opacity-10 text-center h-100">
+                    <div class="text-accent display-4 fw-bold mb-2">100%</div>
+                    <div class="text-white fw-bold h5">Юридическая чистота</div>
+                    <p class="text-white small mt-2">Работаем только по белому договору и без скрытых
+                        комиссий.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Info -->
+        <div class="row g-5 align-items-stretch">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="p-5 bg-card rounded-5 h-100 border border-secondary border-opacity-10">
+                    <h3 class="text-white mb-4">Наша миссия</h3>
+                    <p class="text-white fs-5 lh-lg">Сделать покупку за рубежом максимально простой,
+                        понятной и безопасной. Мы берем на себя все риски, связанные с логистикой и растаможкой, чтобы вы
+                        могли спать спокойно.</p>
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="p-5 bg-card rounded-5 h-100 border border-secondary border-opacity-10">
+                    <h3 class="text-white mb-4">Почему мы?</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-4 d-flex align-items-start">
+                            <i class="bi bi-patch-check-fill text-accent fs-4 me-3"></i>
+                            <div>
+                                <span class="text-white fw-bold d-block">Учредитель компании гражданин КНР!</span>
+                                <span class="text-white small opacity-75">(Наши автомобили выпускают раньше с Китайской таможни)</span>
+                            </div>
+                        </li>
+                        <li class="mb-4 d-flex align-items-start">
+                            <i class="bi bi-patch-check-fill text-accent fs-4 me-3"></i>
+                            <div>
+                                <span class="text-white fw-bold d-block">Персональный менеджер! Удобный сервис!</span>
+                                <span class="text-white small opacity-75">(Сопровождение сделки 24\7, быстрая обработка заявки, бесплатный подбор автомобиля)</span>
+                            </div>
+                        </li>
+                        <li class="mb-4 d-flex align-items-start">
+                            <i class="bi bi-patch-check-fill text-accent fs-4 me-3"></i>
+                            <div>
+                                <span class="text-white fw-bold d-block">Наша автомобильная площадка в Китае!</span>
+                                <span class="text-white small opacity-75">(Выкупленные автомобили, которые можем продавать только мы)</span>
+                            </div>
+                        </li>
+                        <li class="mb-4 d-flex align-items-start">
+                            <i class="bi bi-patch-check-fill text-accent fs-4 me-3"></i>
+                            <div>
+                                <span class="text-white fw-bold d-block">Собственная логистическая и транспортная компания в Китае!</span>
+                                <span class="text-white small opacity-75">(Залог быстрой доставки)</span>
+                            </div>
+                        </li>
+                        <li class="mb-0 d-flex align-items-start">
+                            <i class="bi bi-patch-check-fill text-accent fs-4 me-3"></i>
+                            <div>
+                                <span class="text-white fw-bold d-block">Свой сервисный центр в Китае!</span>
+                                <span class="text-white small opacity-75">(Предпродажная подготовка, детейлинг, установка дополнительных опций в автомобиль)</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="mt-5 p-5 bg-accent-soft rounded-5 text-center shadow-lg border border-accent border-opacity-25"
+            data-aos="zoom-in">
+            <h3 class="text-white mb-4">Познакомимся поближе?</h3>
+            <p class="text-white mb-5 mx-auto" style="max-width: 700px;">Приезжайте к нам в офис на чашку
+                кофе или оставьте заявку — мы расскажем всё о том, как купить НУЖНЫЙ автомобиль!</p>
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <a href="{{ url_for('contact') }}" class="btn btn-primary-custom px-5 py-3">Оставить заявку</a>
+                <a href="tel:88002509151" class="btn btn-outline-light px-5 py-3 rounded-4 fw-bold">Позвонить</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+<style>
+    .text-accent {
+        color: var(--accent);
+    }
+
+    .bg-accent-soft {
+        background-color: rgba(230, 57, 70, 0.05);
+    }
+
+    .lh-lg {
+        line-height: 1.8;
+    }
+</style>
