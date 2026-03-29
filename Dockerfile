@@ -29,9 +29,11 @@ COPY requirements.txt .
 # Установка Python-зависимостей
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the database and all project files
-# We ensure site.db is included
+# Copy all project files, ensuring site.db is included
 COPY . .
+# Explicitly ensure site.db is in the root
+COPY site.db /app/site.db
+
 
 # Expose the Flask port
 EXPOSE 5000
