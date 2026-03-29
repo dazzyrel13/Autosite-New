@@ -26,6 +26,7 @@ instance/*
 htmlcov/
 migrations/
 *.db
+!site.db
 *.sqlite
 node_modules/
 .DS_Store
