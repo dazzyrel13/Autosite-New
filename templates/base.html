@@ -21,6 +21,12 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical"
         href="{{ request.base_url }}{% if request.args.get('page') %}?page={{ request.args.get('page') }}{% endif %}">
+    
+    <!-- Brand Identity & PWA -->
+    <link rel="icon" type="image/webp" href="{{ url_for('static', filename='logo_emblem.webp') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='logo_emblem.webp') }}">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#FF0000">
 
     <!-- Analytics Placeholders (Replace [ID] with your real tracking IDs) -->
     <!-- [G-Analytics] <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script> -->
@@ -228,62 +234,6 @@
         </div>
     </div>
 
-    <style>
-        .mobile-action-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 70px;
-            background: rgba(10, 1, 1, 0.85);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            z-index: 10000;
-            padding-bottom: env(safe-area-inset-bottom);
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
-            animation: slideUpBar 0.6s cubic-bezier(0.2, 1, 0.3, 1);
-        }
-
-        @keyframes slideUpBar {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
-
-        .mobile-action-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-decoration: none;
-            font-size: 0.7rem;
-            font-weight: 600;
-            transition: all 0.3s;
-            width: 30%;
-        }
-
-        .mobile-action-item i {
-            font-size: 1.4rem;
-            margin-bottom: 4px;
-            color: var(--accent);
-        }
-
-        .mobile-action-item.secondary i {
-            color: #25D366; /* WhatsApp Green */
-        }
-
-        .mobile-action-item:active {
-            transform: scale(0.9);
-            opacity: 0.7;
-        }
-
-        /* Adjust footer padding on mobile for the bar */
-        @media (max-width: 991px) {
-            .footer { padding-bottom: 100px !important; }
-            .cookie-banner-glass { bottom: 85px !important; }
-        }
-    </style>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -466,23 +416,23 @@
     {% block extra_js %}{% endblock %}
 
     <!-- Cookie Consent Banner (Legal Compliance) -->
-    <div id="cookie-banner" class="cookie-banner-glass" style="display: none;">
+    <div id="cookie-banner" class="cookie-banner-glass banner-hidden">
         <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
             <div class="text-white small">
                 <i class="bi bi-shield-check-fill text-accent me-2"></i>
                 Мы используем файлы cookie для улучшения работы сайта и аналитики. Продолжая работу с сайтом, вы соглашаетесь с 
-                <a href="{{ url_for('privacy_policy') }}" class="text-accent text-decoration-none fw-bold">политикой конфиденциальности</a>.
+                <a href="{{ url_for('privacy_policy') }}" class="text-accent text-decoration-none fw-bold" aria-label="Политика конфиденциальности">политикой конфиденциальности</a>.
             </div>
-            <button id="accept-cookies" class="btn btn-accent-glow px-4 py-2 rounded-pill fw-bold text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Принять</button>
+            <button id="accept-cookies" class="btn btn-accent-glow px-4 py-2 rounded-pill fw-bold text-uppercase" aria-label="Принять куки">Принять</button>
         </div>
     </div>
-
+ 
     <!-- PWA Install Prompt (Glassmorphism Style) -->
-    <div id="pwa-install-banner" class="pwa-banner-glass" style="display: none;">
+    <div id="pwa-install-banner" class="pwa-banner-glass banner-hidden">
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
             <div class="d-flex align-items-center gap-3">
                 <div class="pwa-icon-box">
-                    <img src="/static/logo_emblem.webp" width="40" height="40" alt="Logo">
+                    <img src="/static/logo_emblem.webp" width="40" height="40" alt="Логотип Турбо-ДВ">
                 </div>
                 <div>
                     <h6 class="text-white mb-0 fw-bold">Установить Турбо-ДВ</h6>
@@ -490,96 +440,24 @@
                 </div>
             </div>
             <div class="d-flex gap-2">
-                <button id="pwa-install-btn" class="btn btn-accent-glow px-4 rounded-3 btn-sm">Установить</button>
-                <button id="pwa-close-btn" class="btn btn-outline-light border-0 opacity-50 btn-sm"><i class="bi bi-x-lg"></i></button>
+                <button id="pwa-install-btn" class="btn btn-accent-glow px-4 rounded-3 btn-sm" aria-label="Установить приложение">Установить</button>
+                <button id="pwa-close-btn" class="btn btn-outline-light border-0 opacity-50 btn-sm" aria-label="Закрыть"><i class="bi bi-x-lg"></i></button>
             </div>
         </div>
     </div>
 
-    <style>
-        .cookie-banner-glass {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 900px;
-            background: rgba(10, 1, 1, 0.9);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 15px 25px;
-            z-index: 9999;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.8), 0 0 30px rgba(255, 0, 21, 0.15);
-            animation: slideUpCookie 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-            transition: opacity 0.5s ease;
-        }
-
-        .pwa-banner-glass {
-            position: fixed;
-            top: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 600px;
-            background: rgba(10, 1, 1, 0.9);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 12px 20px;
-            z-index: 10001;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 0, 21, 0.1);
-            animation: slideDownFade 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-            transition: all 0.5s ease;
-        }
-
-        @keyframes slideDownFade {
-            from { transform: translate(-50%, -100%); opacity: 0; }
-            to { transform: translate(-50%, 0); opacity: 1; }
-        }
-
-        .pwa-icon-box {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 8px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        @keyframes slideUpCookie {
-            from { transform: translate(-50%, 150%); opacity: 0; }
-            to { transform: translate(-50%, 0); opacity: 1; }
-        }
-        .btn-accent-glow {
-            background: var(--accent);
-            color: white;
-            border: none;
-            box-shadow: 0 0 15px var(--accent-glow);
-            transition: all 0.3s ease;
-        }
-        .btn-accent-glow:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 25px var(--accent);
-            color: white;
-        }
-    </style>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Cookie Banner
             if (!localStorage.getItem('turbo_cookies_accepted')) {
                 setTimeout(() => {
-                    document.getElementById('cookie-banner').style.display = 'block';
+                    document.getElementById('cookie-banner').classList.remove('banner-hidden');
                 }, 1500);
             }
             document.getElementById('accept-cookies').addEventListener('click', function() {
                 localStorage.setItem('turbo_cookies_accepted', 'true');
-                const banner = document.getElementById('cookie-banner');
-                banner.style.opacity = '0';
-                setTimeout(() => {
-                    banner.style.display = 'none';
-                }, 500);
+                document.getElementById('cookie-banner').classList.add('banner-hidden');
             });
 
             // PWA Install Prompt Logic
@@ -603,18 +481,15 @@
             installBtn.addEventListener('click', async () => {
                 if (deferredPrompt) {
                     deferredPrompt.prompt();
-                    const { outcome } = await deferredPrompt.userChoice;
-                    console.log(`User response to install prompt: ${outcome}`);
+                    await deferredPrompt.userChoice;
                     deferredPrompt = null;
-                    pwaBanner.style.opacity = '0';
-                    setTimeout(() => pwaBanner.style.display = 'none', 500);
+                    pwaBanner.classList.add('banner-hidden');
                 }
             });
-
+ 
             closeBtn.addEventListener('click', () => {
                 localStorage.setItem('pwa_banner_closed', 'true');
-                pwaBanner.style.opacity = '0';
-                setTimeout(() => pwaBanner.style.display = 'none', 500);
+                pwaBanner.classList.add('banner-hidden');
             });
         });
     </script>

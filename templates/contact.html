@@ -26,9 +26,8 @@
                 <div class="mb-5">
                     <h2 class="fw-bold text-white mb-5">Прямые контакты</h2>
 
-                    <div class="d-flex align-items-center mb-5 group">
-                        <div
-                            class="bg-accent-soft rounded-4 p-4 text-accent me-4 transition-smooth group-hover-bg-accent group-hover-text-white shadow-sm">
+                    <div class="d-flex align-items-center mb-5 contact-group">
+                        <div class="contact-icon-box me-4">
                             <i class="bi bi-geo-alt fs-2"></i>
                         </div>
                         <div>
@@ -36,10 +35,9 @@
                             <div class="fw-bold fs-5 text-white">Благовещенск, Ленина 106</div>
                         </div>
                     </div>
-
-                    <div class="d-flex align-items-center mb-5 group">
-                        <div
-                            class="bg-accent-soft rounded-4 p-4 text-accent me-4 transition-smooth group-hover-bg-accent group-hover-text-white shadow-sm">
+ 
+                    <div class="d-flex align-items-center mb-5 contact-group">
+                        <div class="contact-icon-box me-4">
                             <i class="bi bi-telephone fs-2"></i>
                         </div>
                         <div>
@@ -47,90 +45,80 @@
                             <div class="fw-bold fs-4 text-white">8 (800) 250-91-51</div>
                         </div>
                     </div>
-
-                    <div class="d-flex align-items-center mb-5 group">
-                        <div
-                            class="bg-accent-soft rounded-4 p-4 text-accent me-4 transition-smooth group-hover-bg-accent group-hover-text-white shadow-sm">
+ 
+                    <div class="d-flex align-items-center mb-5 contact-group">
+                        <div class="contact-icon-box me-4">
                             <i class="bi bi-envelope fs-2"></i>
                         </div>
                         <div>
-                            <div class="text-white opacity-50 small text-uppercase fw-bold mb-1">Электронная почта
-                            </div>
+                            <div class="text-white opacity-50 small text-uppercase fw-bold mb-1">Электронная почта</div>
                             <div class="fw-bold fs-5 text-white">Turbo.dv@yandex.ru</div>
                         </div>
                     </div>
-
-                    <div class="d-flex align-items-center group">
-                        <div
-                            class="bg-accent-soft rounded-4 p-4 text-accent me-4 transition-smooth group-hover-bg-accent group-hover-text-white shadow-sm">
+ 
+                    <div class="d-flex align-items-center contact-group">
+                        <div class="contact-icon-box me-4">
                             <i class="bi bi-clock fs-2"></i>
                         </div>
                         <div>
-                            <div class="text-white opacity-50 small text-uppercase fw-bold mb-1">Режим работы
-                            </div>
+                            <div class="text-white opacity-50 small text-uppercase fw-bold mb-1">Режим работы</div>
                             <div class="fw-bold fs-5 text-white">Пн-Пт: 09:00 — 18:00 <br>
                                 <span class="small opacity-75 fw-normal d-block mb-1">(По Благовещенску! МСК +6ч)</span>
-                                <span class="text-white-50 fw-light" style="font-size: 0.95rem;">Сб-Вс: По предварительной записи</span>
+                                <span class="text-white opacity-50 fw-light" style="font-size: 0.95rem;">Сб-Вс: По предварительной записи</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Modern Form -->
             <div class="col-lg-7" data-aos="fade-left">
-                <div class="bg-card p-5 rounded-5 shadow-lg border border-secondary border-opacity-10">
+                <div class="info-glass-card">
                     <h3 class="fw-bold mb-4 text-white">Отправить быстрый запрос</h3>
                     <p class="text-white opacity-50 mb-5">Заполните форму, и мы подготовим для вас персональное
-                        предложение в
-                        течение рабочего часа.</p>
-
+                        предложение в течение рабочего часа.</p>
+ 
                     <form id="contactForm" class="ajax-lead-form">
                         <input type="hidden" name="item" value="Форма обратной связи (Страница контактов)">
                         <div class="row g-4">
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control rounded-4 border-0 bg-dark text-white"
+                                    <input type="text" class="form-control rounded-4 border-0"
                                         id="contactName" name="name" placeholder="Имя" required>
-                                    <label for="contactName" class="text-muted">Ваше имя</label>
+                                    <label for="contactName">Ваше имя</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="tel" class="form-control rounded-4 border-0 bg-dark text-white"
+                                    <input type="tel" class="form-control rounded-4 border-0"
                                         id="contactPhone" name="phone" placeholder="Телефон" required>
-                                    <label for="contactPhone" class="text-muted">Номер телефона</label>
+                                    <label for="contactPhone">Номер телефона</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control rounded-4 border-0 bg-dark text-white"
+                                    <input type="text" class="form-control rounded-4 border-0"
                                         id="contactCity" name="city" placeholder="Город" required>
-                                    <label for="contactCity" class="text-muted">Ваш город</label>
+                                    <label for="contactCity">Ваш город</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input type="email" class="form-control rounded-4 border-0 bg-dark text-white"
+                                    <input type="email" class="form-control rounded-4 border-0"
                                         id="contactEmail" name="email" placeholder="Email">
-                                    <label for="contactEmail" class="text-muted">E-mail (опционально)</label>
+                                    <label for="contactEmail">E-mail (опционально)</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <textarea class="form-control rounded-4 border-0 bg-dark text-white" id="contactMsg"
+                                    <textarea class="form-control rounded-4 border-0" id="contactMsg"
                                         name="message" placeholder="Сообщение" style="height: 150px"
                                         required></textarea>
-                                    <label for="contactMsg" class="text-muted">Опишите вашу задачу или назовите
-                                        модель</label>
+                                    <label for="contactMsg">Опишите вашу задачу или назовите модель</label>
                                 </div>
                             </div>
                             <div class="col-12 mt-5">
-                                <button type="submit" class="btn btn-primary-custom w-100 py-4 fs-5">Отправить
-                                    эксперту</button>
-                                <p class="text-center text-muted small mt-4">Нажимая кнопку, вы соглашаетесь с
-                                    политикой
-                                    конфиденциальности.</p>
+                                <button type="submit" class="btn btn-primary-custom w-100 py-4 fs-5">Отправить эксперту</button>
+                                <p class="text-center text-muted small mt-4">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности.</p>
                             </div>
                         </div>
                     </form>
@@ -140,52 +128,5 @@
     </div>
 </section>
 
-<style>
-    .bg-card {
-        background-color: var(--bg-offset);
-    }
-
-    .bg-accent-soft {
-        background-color: var(--accent-soft);
-    }
-
-    .text-accent {
-        color: var(--accent);
-    }
-
-    .transition-smooth {
-        transition: all 0.4s ease;
-    }
-
-    .group:hover .group-hover-bg-accent {
-        background-color: var(--accent);
-    }
-
-    .group:hover .group-hover-text-white {
-        color: white !important;
-    }
-
-    /* Улучшение видимости полей формы */
-    .form-control {
-        background-color: rgba(255, 255, 255, 0.05) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        color: white !important;
-    }
-
-    .form-floating label {
-        color: rgba(255, 255, 255, 0.6) !important;
-    }
-
-    .form-floating>.form-control:focus~label,
-    .form-floating>.form-control:not(:placeholder-shown)~label {
-        color: var(--accent) !important;
-        opacity: 1 !important;
-    }
-
-    .form-control:focus {
-        background-color: rgba(255, 255, 255, 0.08) !important;
-        border-color: var(--accent) !important;
-        box-shadow: 0 0 0 0.25rem var(--accent-soft) !important;
-    }
-</style>
+{% endblock %}
 {% endblock %}

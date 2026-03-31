@@ -19,271 +19,12 @@
 {% endif %}
 {% endblock %}
 
-{% block content %}
-<div class="fluid-overlay"></div>
-
-<style>
-    .vehicles-section {
-        padding-top: 160px !important;
-    }
-
-    .section-title {
-        margin-top: 60px !important;
-    }
-
-    @media (max-width: 768px) {
-        .vehicles-section {
-            padding-top: 100px !important;
-        }
-        .section-title {
-            margin-top: 20px !important;
-        }
-        .display-4 {
-            font-size: 2.2rem !important;
-        }
-    }
-
-    /* ═══════ Filter Panel ═══════ */
-    .filter-panel {
-        background: rgba(255, 0, 21, 0.03);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 0, 21, 0.15);
-        border-radius: 24px;
-        padding: 28px 32px;
-        margin-bottom: 36px;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .filter-panel:hover {
-        border-color: rgba(255, 0, 21, 0.3);
-        box-shadow: 0 8px 32px rgba(255, 0, 21, 0.08);
-    }
-
-    .filter-toggle-btn {
-        background: rgba(255, 0, 21, 0.08);
-        border: 1px solid rgba(255, 0, 21, 0.2);
-        color: white;
-        border-radius: 14px;
-        padding: 12px 24px;
-        font-weight: 600;
-        font-size: 0.9rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .filter-toggle-btn:hover {
-        background: rgba(255, 0, 21, 0.15);
-        border-color: var(--accent);
-        transform: translateY(-2px);
-    }
-
-    .filter-toggle-btn .chevron-icon {
-        transition: transform 0.3s ease;
-    }
-
-    .filter-toggle-btn[aria-expanded="true"] .chevron-icon {
-        transform: rotate(180deg);
-    }
-
-    .filter-input {
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        padding: 11px 16px;
-        color: white;
-        font-size: 0.88rem;
-        width: 100%;
-        transition: all 0.3s ease;
-        -webkit-appearance: none;
-        appearance: none;
-    }
-
-    .filter-input:focus {
-        border-color: var(--accent);
-        box-shadow: 0 0 0 3px rgba(255, 0, 21, 0.15);
-        outline: none;
-        background: rgba(255, 255, 255, 0.07);
-    }
-
-    .filter-input::placeholder {
-        color: rgba(255, 255, 255, 0.3);
-    }
-
-    .filter-input option {
-        background: #1a0505;
-        color: white;
-    }
-
-    .filter-label {
-        color: rgba(255, 255, 255, 0.5);
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 8px;
-        display: block;
-    }
-
-    .filter-group {
-        position: relative;
-    }
-
-    .filter-actions {
-        display: flex;
-        gap: 12px;
-        align-items: center;
-    }
-
-    .btn-filter-apply {
-        background: var(--accent);
-        color: white;
-        border: none;
-        border-radius: 14px;
-        padding: 12px 32px;
-        font-weight: 700;
-        font-size: 0.88rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 20px rgba(255, 0, 21, 0.25);
-    }
-
-    .btn-filter-apply:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(255, 0, 21, 0.35);
-    }
-
-    .btn-filter-reset {
-        background: transparent;
-        color: rgba(255, 255, 255, 0.6);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 14px;
-        padding: 12px 24px;
-        font-weight: 600;
-        font-size: 0.88rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-decoration: none;
-    }
-
-    .btn-filter-reset:hover {
-        color: white;
-        border-color: rgba(255, 255, 255, 0.3);
-        background: rgba(255, 255, 255, 0.05);
-    }
-
-    /* Active filter tags */
-    .active-filters {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 16px;
-    }
-
-    .filter-tag {
-        background: rgba(255, 0, 21, 0.12);
-        border: 1px solid rgba(255, 0, 21, 0.3);
-        color: white;
-        border-radius: 10px;
-        padding: 6px 14px;
-        font-size: 0.78rem;
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        transition: all 0.2s ease;
-    }
-
-    .filter-tag:hover {
-        background: rgba(255, 0, 21, 0.2);
-    }
-
-    .filter-tag .remove-tag {
-        cursor: pointer;
-        opacity: 0.6;
-        transition: opacity 0.2s;
-        font-size: 0.9rem;
-    }
-
-    .filter-tag .remove-tag:hover {
-        opacity: 1;
-    }
-
-    /* Sort bar */
-    .sort-bar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-bottom: 28px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .sort-bar .result-count {
-        color: rgba(255, 255, 255, 0.6);
-        font-size: 0.92rem;
-    }
-
-    .sort-bar .result-count strong {
-        color: var(--accent);
-        font-weight: 700;
-    }
-
-    .sort-select {
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        color: white;
-        padding: 9px 16px;
-        font-size: 0.85rem;
-        cursor: pointer;
-        -webkit-appearance: none;
-        appearance: none;
-        min-width: 180px;
-        transition: all 0.3s ease;
-    }
-
-    .sort-select:focus {
-        border-color: var(--accent);
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(255, 0, 21, 0.12);
-    }
-
-    .sort-select option {
-        background: #1a0505;
-        color: white;
-    }
-
-    /* Responsive filters */
-    @media (max-width: 768px) {
-        .filter-panel {
-            padding: 20px;
-            border-radius: 20px;
-        }
-        .filter-actions {
-            flex-direction: column;
-            width: 100%;
-        }
-        .btn-filter-apply, .btn-filter-reset {
-            width: 100%;
-            text-align: center;
-        }
-        .sort-bar {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .sort-select {
-            width: 100%;
-        }
-    }
-</style>
-
-<section class="vehicles-section" style="background: transparent; padding-bottom: 80px;">
+{% endblock %}
+ 
+ {% block content %}
+ <div class="fluid-overlay"></div>
+ 
+ <section class="vehicles-section">
     <div class="container">
         <div class="section-title text-start mb-4" data-aos="fade-up">
             <span class="text-accent fw-bold text-uppercase small d-block mb-2"
@@ -476,31 +217,25 @@
             <ul class="pagination justify-content-center">
                 {% if pagination.has_prev %}
                 <li class="page-item">
-                    <a class="page-link bg-transparent border-secondary text-white"
-                        href="{{ url_for(request.endpoint, page=pagination.prev_num, **request.args) }}">Назад</a>
+                    <a class="page-link" href="{{ url_for(request.endpoint, page=pagination.prev_num, **request.args) }}">Назад</a>
                 </li>
                 {% endif %}
-
+ 
                 {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
                 {% if page_num %}
                 {% if pagination.page == page_num %}
-                <li class="page-item active"><span class="page-link bg-accent border-accent text-white">{{ page_num
-                        }}</span></li>
+                <li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
                 {% else %}
-                <li class="page-item"><a class="page-link bg-transparent border-secondary text-white"
-                        href="{{ url_for(request.endpoint, page=page_num, **request.args) }}">{{ page_num }}</a>
-                </li>
+                <li class="page-item"><a class="page-link" href="{{ url_for(request.endpoint, page=page_num, **request.args) }}">{{ page_num }}</a></li>
                 {% endif %}
                 {% else %}
-                <li class="page-item disabled"><span
-                        class="page-link bg-transparent border-secondary text-white">…</span></li>
+                <li class="page-item disabled"><span class="page-link">…</span></li>
                 {% endif %}
                 {% endfor %}
-
+ 
                 {% if pagination.has_next %}
                 <li class="page-item">
-                    <a class="page-link bg-transparent border-secondary text-white"
-                        href="{{ url_for(request.endpoint, page=pagination.next_num, **request.args) }}">Вперёд</a>
+                    <a class="page-link" href="{{ url_for(request.endpoint, page=pagination.next_num, **request.args) }}">Вперёд</a>
                 </li>
                 {% endif %}
             </ul>
@@ -523,21 +258,7 @@
     </div>
 </section>
 
-<style>
-    .bg-card {
-        background-color: var(--bg-offset);
-    }
-
-    .text-accent {
-        color: var(--accent);
-    }
-
-    .border-dashed {
-        border-style: dashed !important;
-        border-color: rgba(255, 255, 255, 0.1) !important;
-        border-width: 2px !important;
-    }
-</style>
+{% endblock %}
 
 <script>
     // Sort handler

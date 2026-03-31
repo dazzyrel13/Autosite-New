@@ -65,28 +65,20 @@
 {% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{{ static_versioned('vehicle_detail.css') }}">
 <div class="fluid-overlay"></div>
 
-<section class="vehicle-detail-section py-5">
+<section class="vehicle-detail-section">
     <div class="container py-5">
         <!-- Modern Breadcrumb -->
         <nav aria-label="breadcrumb" class="mb-5" data-aos="fade-down">
-            <ol class="breadcrumb bg-card p-3 rounded-4 px-4 m-0 shadow-sm border border-secondary border-opacity-10">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Главная</a></li>
                 <li class="breadcrumb-item">
-                    <a href="{{ url_for('index') }}"
-                        class="text-decoration-none text-white opacity-75 fw-medium hover-accent">Главная</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a href="{{ url_for('catalog', cat_slug=vehicle.category) }}"
-                        class="text-decoration-none text-white opacity-75 fw-medium hover-accent">
+                    <a href="{{ url_for('catalog', cat_slug=vehicle.category) }}">
                         {{ cat_labels.get(vehicle.category, 'Каталог') }}
                     </a>
                 </li>
-                <li class="breadcrumb-item active fw-bold text-white" aria-current="page"
-                    style="opacity: 1 !important;">
-                    {{ vehicle.brand }} {{ vehicle.model }}
-                </li>
+                <li class="breadcrumb-item active" aria-current="page">{{ vehicle.brand }} {{ vehicle.model }}</li>
             </ol>
         </nav>
 
@@ -123,8 +115,7 @@
                     </div>
                 </div>
 
-                <div class="p-5 bg-card rounded-5 shadow-sm border border-secondary border-opacity-10"
-                    data-aos="fade-up">
+                <div class="info-glass-card mb-5">
                     <h3 class="fw-bold mb-4 text-white">Описание модели</h3>
                     <div class="text-white opacity-75 fs-5 lh-lg">{{ vehicle.description }}</div>
                 </div>
@@ -132,14 +123,12 @@
 
             <!-- Right: Info & Actions -->
             <div class="col-lg-5">
-                <div class="sticky-top" style="top: 120px;" data-aos="fade-left">
-                    <div class="p-5 bg-card rounded-5 shadow-lg border border-secondary border-opacity-10">
+                <div class="sticky-top" style="top: 130px;" data-aos="fade-left">
+                    <div class="info-glass-card">
                         <div class="mb-4">
-                            <span
-                                class="badge bg-accent-soft text-accent px-3 py-2 rounded-3 text-uppercase fw-bold small mb-2 d-inline-block">{{
-                                vehicle.badge }}</span>
-                            <h1 class="display-5 fw-bold text-white mb-2 line-height-1">{{ vehicle.brand }}</h1>
-                            <h2 class="h3 fw-light text-white opacity-75">{{ vehicle.model }}</h2>
+                            <span class="badge bg-danger px-3 py-2 rounded-3 text-uppercase fw-bold small mb-3">{{ vehicle.badge }}</span>
+                            <h1 class="display-5 fw-bold text-white mb-1 line-height-1">{{ vehicle.brand }}</h1>
+                            <h2 class="h3 fw-light text-white opacity-50">{{ vehicle.model }}</h2>
                         </div>
 
                         <div class="vehicle-detail-price mb-2">
@@ -152,25 +141,25 @@
 
                         <div class="row g-3 mt-4 mb-5">
                             <div class="col-6">
-                                <div class="p-3 bg-dark rounded-4 text-center">
+                                <div class="p-3 bg-dark bg-opacity-25 rounded-4 text-center border border-white border-opacity-10">
                                     <div class="text-white opacity-50 small mb-1">Год</div>
                                     <div class="fw-bold fs-5 text-accent">{{ vehicle.year }}</div>
                                 </div>
                             </div>
                             <div class="col-6">
-                                <div class="p-3 bg-dark rounded-4 text-center">
+                                <div class="p-3 bg-dark bg-opacity-25 rounded-4 text-center border border-white border-opacity-10">
                                     <div class="text-white opacity-50 small mb-1">Пробег</div>
                                     <div class="fw-bold fs-5 text-accent">{% if vehicle.mileage %}{{ vehicle.mileage }} км{% else %}-{% endif %}</div>
                                 </div>
                             </div>
                             <div class="col-6">
-                                <div class="p-3 bg-dark rounded-4 text-center">
+                                <div class="p-3 bg-dark bg-opacity-25 rounded-4 text-center border border-white border-opacity-10">
                                     <div class="text-white opacity-50 small mb-1">Объем</div>
                                     <div class="fw-bold fs-5 text-accent">{% if vehicle.engine_vol %}{{ vehicle.engine_vol }} л{% else %}-{% endif %}</div>
                                 </div>
                             </div>
                             <div class="col-6">
-                                <div class="p-3 bg-dark rounded-4 text-center">
+                                <div class="p-3 bg-dark bg-opacity-25 rounded-4 text-center border border-white border-opacity-10">
                                     <div class="text-white opacity-50 small mb-1">Мощность</div>
                                     <div class="fw-bold fs-5 text-accent">{% if vehicle.power %}{{ vehicle.power }} л.с.{% else %}-{% endif %}</div>
                                 </div>
@@ -194,7 +183,7 @@
                         </div>
 
                         {% if vehicle.status == 'sold' %}
-                        <button class="btn btn-secondary w-100 py-4 fs-5 mb-3" data-bs-toggle="modal"
+                        <button class="btn btn-secondary w-100 py-4 fs-5 mb-3 rounded-4" data-bs-toggle="modal"
                             data-bs-target="#callbackModal">
                             Привезти такую же
                         </button>
@@ -207,7 +196,7 @@
                     </div>
 
                     <div class="mt-4 text-center p-4 bg-accent-soft rounded-5 text-accent fw-bold small"
-                        style="border: 1px dashed var(--accent);">
+                        style="background: rgba(255, 0, 0, 0.05); border: 1px dashed var(--accent);">
                         <i class="bi bi-shield-check me-2"></i> Безопасная сделка & Юридический контроль
                     </div>
                 </div>
@@ -223,7 +212,7 @@
             style="background-color: #0a0101; border: 1px solid rgba(255, 255, 255, 0.1) !important;">
             <div class="modal-body p-5">
                 <div class="text-center mb-5">
-                    <div class="bg-accent-soft rounded-circle d-inline-flex p-4 mb-4">
+                    <div class="bg-accent-soft rounded-circle d-inline-flex p-4 mb-4" style="background: rgba(255,0,0,0.1);">
                         <i class="bi bi-envelope-check fs-1 text-accent"></i>
                     </div>
                     <h3 class="fw-bold text-white">Оставить заявку</h3>
@@ -235,17 +224,17 @@
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control rounded-4 border-0 bg-dark text-white" id="nameInput"
                             name="name" placeholder="Имя" required>
-                        <label for="nameInput" class="text-muted">Ваше имя</label>
+                        <label for="nameInput">Ваше имя</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="tel" class="form-control rounded-4 border-0 bg-dark text-white" id="phoneInput"
                             name="phone" placeholder="Телефон" required>
-                        <label for="phoneInput" class="text-muted">Телефон</label>
+                        <label for="phoneInput">Телефон</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control rounded-4 border-0 bg-dark text-white" id="cityInput"
                             name="city" placeholder="Город" required>
-                        <label for="cityInput" class="text-muted">Ваш город</label>
+                        <label for="cityInput">Ваш город</label>
                     </div>
                     <button type="submit" class="btn btn-primary-custom w-100 py-4 fs-5 mt-4">Отправить данные</button>
                 </form>
@@ -253,5 +242,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}

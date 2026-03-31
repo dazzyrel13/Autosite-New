@@ -1,4 +1,8 @@
-/* Turbo DV - Premium & High-Tech Design System */
+/* 
+   Turbo DV - Official Premium Design System v1.2 [FINAL PRODUCTION]
+   Theme: High-Contrast Cyber-Glass (Red / Black / White)
+   Author: Antigravity AI
+*/
 
 :root {
     --primary: #000000;
@@ -6,595 +10,84 @@
     --accent: #ff0000;
     --accent-rgb: 255, 0, 0;
     --accent-dark: #cc0000;
-    --accent-glow: rgba(255, 0, 0, 0.4);
+    --accent-glow: rgba(255, 0, 0, 0.45);
     --text-main: #ffffff;
-    --text-muted: #e0e0e0;
-    --bg-dark: #000000;
-    --glass-bg: rgba(0, 0, 0, 0.85);
-    --glass-border: rgba(255, 255, 255, 0.2);
-    --glass-highlight: rgba(255, 0, 0, 0.3);
-    --card-radius: 20px;
-    --transition-premium: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --shadow-deep: 0 10px 40px rgba(0, 0, 0, 0.9);
+    --text-muted: rgba(255, 255, 255, 0.85);
+    --text-dim: rgba(255, 255, 255, 0.6);
+    --glass-bg: rgba(10, 1, 1, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-highlight: rgba(255, 0, 0, 0.25);
+    --card-radius: 24px;
+    --transition-premium: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* 1. === Global Base === */
 body {
-    background-color: #000;
-    background-image: url('../static/images/fon.webp');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    color: var(--text-main);
-    font-family: 'Inter', sans-serif;
-    line-height: 1.6;
-    overflow-x: hidden;
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
+    background: #000 url('../static/images/fon.webp') fixed center/cover no-repeat;
+    color: var(--text-main); font-family: 'Inter', sans-serif; line-height: 1.6; overflow-x: hidden; margin: 0; min-height: 100vh;
 }
+.fluid-overlay { position: fixed; inset: 0; background: radial-gradient(circle at top right, rgba(255, 0, 0, 0.08), transparent 60%); pointer-events: none; z-index: -1; }
+h1, h2, h3, h4, .navbar-brand { font-family: 'Sora', sans-serif; font-weight: 800; letter-spacing: -0.02em; }
+.section-title { font-size: 3.5rem; font-weight: 950; margin-bottom: 60px; position: relative; letter-spacing: -2px; text-shadow: 0 0 30px rgba(255, 0, 0, 0.2); }
+.section-title::after { content: ''; position: absolute; bottom: -15px; left: 0; width: 60px; height: 6px; background: var(--accent); border-radius: 3px; box-shadow: 0 0 20px var(--accent); }
 
-/* Typography Enhancements */
-h1, h2, h3, h4, .navbar-brand {
-    font-family: 'Sora', sans-serif;
-    letter-spacing: -0.02em;
-    font-weight: 700;
-}
+/* 2. === Common UI Components === */
+.form-control, .form-select { background: rgba(255, 255, 255, 0.04) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; color: white !important; padding: 12px 18px !important; border-radius: 14px !important; transition: var(--transition-premium) !important; }
+.form-control:focus, .form-select:focus { border-color: var(--accent) !important; background: rgba(255, 255, 255, 0.08) !important; box-shadow: 0 0 15px rgba(255, 0, 0, 0.25) !important; outline: none; }
+.pagination .page-link { background: rgba(255, 255, 255, 0.03) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; color: white !important; border-radius: 12px; margin: 0 4px; padding: 10px 18px; transition: var(--transition-premium); }
+.pagination .page-item.active .page-link { background: var(--accent) !important; border-color: var(--accent) !important; box-shadow: 0 0 20px var(--accent-glow); }
 
-.brand-text {
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-weight: 800;
-}
+/* 3. === Glassmorphism Components === */
+.info-glass-card { background: rgba(15, 2, 2, 0.6) !important; backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 28px; padding: 40px; transition: var(--transition-premium); }
+.info-glass-card:hover { border-color: var(--accent); transform: translateY(-10px); }
+.deep-search-card { background: rgba(15, 0, 0, 0.7) !important; backdrop-filter: blur(35px); border: 1px solid var(--glass-border); border-radius: 30px; padding: 45px; box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7); }
+.stats-number { color: var(--accent); font-size: 4.8rem; font-weight: 950; text-shadow: 0 0 30px rgba(255, 0, 0, 0.5); letter-spacing: -3px; }
 
-/* Glassmorphism Core */
-.glass-panel {
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--shadow-deep);
-}
+/* 4. === Navigation & Search === */
+.navbar { background: var(--glass-bg) !important; backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-bottom: 2px solid var(--glass-highlight); border-radius: 20px; padding: 10px 30px !important; transition: var(--transition-premium); top: 20px; left: 50%; transform: translateX(-50%); width: 95%; max-width: 1450px; position: fixed; z-index: 1100; }
+.navbar.scrolled { top: 10px; background: rgba(0, 0, 0, 0.95) !important; }
+.nav-link.active { background: var(--accent) !important; color: #fff !important; box-shadow: 0 10px 25px var(--accent-glow); border-radius: 12px; }
+.search-results { background: rgba(10, 1, 1, 0.98) !important; border: 1px solid var(--accent); border-radius: 20px; padding: 10px; z-index: 2000; position: absolute; width: 100%; top: 110%; box-shadow: 0 20px 50px #000; }
+.search-result-item { display: flex; align-items: center; padding: 12px; color: white; text-decoration: none; border-radius: 12px; transition: 0.3s; }
+.search-result-item:hover { background: rgba(255, 0, 0, 0.1); }
+.search-result-img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; margin-right: 15px; }
 
-/* Modern Scrollbar */
-::-webkit-scrollbar {
-    width: 6px;
-}
-::-webkit-scrollbar-track {
-    background: var(--bg-dark);
-}
-::-webkit-scrollbar-thumb {
-    background: var(--accent);
-    border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: var(--accent-dark);
-}
+/* 5. === Interactive Cards === */
+.vehicle-card { background: #0d0d0d !important; border: 1px solid var(--glass-border); border-radius: var(--card-radius); overflow: hidden; transition: var(--transition-premium); }
+.vehicle-card:hover { transform: translateY(-15px); border-color: rgba(255, 0, 0, 0.4); box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 0, 0, 0.1); }
+.btn-primary-custom { background: var(--accent) !important; border: none; padding: 16px 40px !important; border-radius: 16px; font-weight: 800; color: white !important; text-transform: uppercase; box-shadow: 0 10px 30px var(--accent-glow); transition: var(--transition-premium); }
+.accent-pulse-btn { animation: pulseGlow 2s infinite; }
+@keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(255, 0, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
 
-/* Navbar: Floating & Sleek - Final Scaling Fix */
-.navbar {
-    background: rgba(10, 1, 1, 0.9) !important;
-    backdrop-filter: blur(25px) saturate(200%);
-    -webkit-backdrop-filter: blur(25px) saturate(200%);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-bottom: 2px solid var(--glass-highlight);
-    border-radius: 24px;
-    padding: 10px 30px !important;
-    transition: var(--transition-premium);
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 95%;
-    max-width: 1450px;
-    position: fixed;
-    z-index: 1100;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.1);
-}
+/* 6. === Specialized UI === */
+.custom-faq .accordion-item { background: transparent !important; border: 1px solid var(--glass-border) !important; border-radius: 20px !important; margin-bottom: 15px; overflow: hidden; }
+.custom-faq .accordion-button { background: rgba(255, 255, 255, 0.03) !important; color: white !important; font-weight: 700; padding: 25px !important; border: none !important; box-shadow: none !important; }
+.custom-faq .accordion-button:not(.collapsed) { color: var(--accent) !important; background: rgba(255, 0, 0, 0.05) !important; }
+.custom-faq .accordion-button::after { filter: invert(1) brightness(200%); }
+.price-warning { background: rgba(255, 0, 0, 0.05); border: 1px solid rgba(255, 0, 0, 0.2); border-radius: 12px; padding: 12px 20px; font-size: 0.85rem; color: var(--text-muted); margin-top: 15px; }
 
-.brand-logo {
-    height: 42px;
-    width: auto;
-    object-fit: contain;
-    transition: transform 0.3s ease;
-}
+/* 7. === Footer & Mobile === */
+.footer { background: #020000 !important; border-top: 1px solid rgba(255, 0, 0, 0.1); padding: 100px 0 40px !important; }
+.footer-links { list-style: none; padding: 0; }
+.footer-links li { margin-bottom: 12px; }
+.footer-links a { text-decoration: none !important; transition: 0.3s; opacity: 0.7; color: #fff; }
+.footer-links a:hover { opacity: 1; color: var(--accent) !important; padding-left: 8px; }
+.footer h4 { color: var(--accent); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; }
+.mobile-action-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 75px; background: rgba(10, 1, 1, 0.95); backdrop-filter: blur(25px); border-top: 1px solid rgba(255, 255, 255, 0.1); z-index: 10000; box-shadow: 0 -10px 40px #000; }
+.banner-hidden { opacity: 0 !important; pointer-events: none !important; transform: translate(-50%, 20px) !important; }
 
-/* Nav Links Scaling */
-.navbar-nav {
-    display: flex;
-    align-items: center;
-    gap: 4px; /* Tighter gap to prevent overflow */
-}
-
-.nav-link {
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.8) !important;
-    padding: 8px 14px !important;
-    transition: var(--transition-premium);
-    border-radius: 12px;
-    font-size: 0.84rem;
-    white-space: nowrap;
-}
-
-.nav-link:hover {
-    color: var(--accent) !important;
-    background: rgba(255, 255, 255, 0.03);
-}
-
-/* Compact Search Box */
-.search-container {
-    position: relative;
-    min-width: 150px; /* Reduced initial width */
-    transition: all 0.4s ease;
-}
-
-.search-input {
-    background: rgba(255, 255, 255, 0.04) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 12px !important;
-    color: white !important;
-    font-size: 0.85rem !important;
-    width: 100% !important;
-    transition: all 0.3s ease;
-}
-
-.search-input:focus {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border-color: var(--accent) !important;
-    box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.15) !important;
-    outline: none;
-    min-width: 240px;
-}
-
-.search-icon {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--accent);
-    opacity: 0.8;
-}
-
-/* Road Decorative Overlays */
-.fluid-overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: radial-gradient(circle at top right, rgba(230, 57, 70, 0.05), transparent 60%);
-    pointer-events: none;
-    z-index: -1;
-}
-
-.page-bg-overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.25));
-    z-index: -2;
-    pointer-events: none;
-}
-
-/* 🏎️ Brand Marquee & Dragon Truck Vivid Fix */
-.brand-marquee {
-    display: flex;
-    white-space: nowrap;
-    overflow: hidden;
-    padding: 20px 0;
-    background: rgba(0, 0, 0, 0.4);
-}
-
-.marquee-group {
-    display: flex;
-    align-items: center;
-    gap: 80px;
-    padding-right: 80px;
-    animation: marquee 35s linear infinite;
-}
-
-@keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-100%); }
-}
-
-.marquee-car {
-    height: 110px;
-    width: auto;
-    object-fit: contain;
-    filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.6));
-    margin: 0 40px;
-}
-
-.marquee-group span {
-    font-size: 1.6rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    color: #fff;
-    opacity: 0.35;
-}
-
-.navbar-brand .brand-text {
-    font-size: 1.1rem;
-    color: white;
-    margin-left: 10px;
-}
-
-.navbar-brand span {
-    color: var(--accent);
-}
-
-.nav-link.active {
-    background: var(--accent) !important;
-    color: #fff !important;
-    box-shadow: 0 10px 25px var(--accent-glow);
-}
-
-/* Premium Vehicle Cards */
-.vehicle-card {
-    background: #111 !important;
-    border: 1px solid var(--glass-border);
-    border-radius: var(--card-radius);
-    overflow: hidden;
-    transition: var(--transition-premium);
-    position: relative;
-    height: 100%;
-}
-
-.vehicle-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(135deg, rgba(230, 57, 70, 0.05) 0%, transparent 40%);
-    pointer-events: none;
-    z-index: 1;
-}
-
-.vehicle-card:hover {
-    transform: translateY(-12px) scale(1.02);
-    border-color: rgba(230, 57, 70, 0.4);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(230, 57, 70, 0.1);
-}
-
-/* Hero Section Evolution */
-.hero {
-    overflow: hidden;
-    position: relative;
-    background: transparent !important;
-}
-
-.hero .container {
-    z-index: 10;
-}
-
-.hero .container {
-    z-index: 10;
-}
-
-.hero h1 {
-    font-size: 4.5rem !important;
-    text-shadow: 0 0 30px rgba(255, 0, 21, 0.2);
-}
-
-@media (max-width: 768px) {
-    .hero h1 { font-size: 2.8rem !important; }
-}
-
-.vehicle-image {
-    position: relative;
-    overflow: hidden;
-    height: 250px;
-}
-
-.vehicle-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.vehicle-card:hover .vehicle-image img {
-    transform: scale(1.1);
-}
-
-.vehicle-badge {
-    position: absolute;
-    top: 20px; right: 20px;
-    background: var(--accent);
-    color: white;
-    padding: 6px 16px;
-    border-radius: 10px;
-    font-size: 0.75rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    z-index: 10;
-    box-shadow: 0 8px 20px rgba(230, 57, 70, 0.4);
-}
-
-/* Price & Info */
-.vehicle-price {
-    font-weight: 800;
-    font-size: 1.6rem;
-    color: #fff;
-    margin: 15px 0 5px;
-}
-
-.vehicle-info {
-    padding: 25px;
-}
-
-/* 🔍 Deep Search Form - High Visibility */
-.deep-search-card {
-    background: rgba(15, 0, 0, 0.6) !important;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 30px;
-    padding: 40px;
-    margin-top: -60px;
-    z-index: 20;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-}
-
-.deep-search-card h2 {
-    color: #fff;
-    font-weight: 800;
-    margin-bottom: 25px;
-    font-size: 1.4rem;
-}
-
-.deep-search-card label {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
-    display: block;
-    font-weight: 600;
-}
-
-.deep-search-card .form-control, 
-.deep-search-card .form-select {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    color: #fff !important;
-    border-radius: 12px !important;
-    padding: 12px 15px !important;
-    transition: all 0.3s;
-}
-
-.deep-search-card .form-control:focus, 
-.deep-search-card .form-select:focus {
-    border-color: var(--accent) !important;
-    background: rgba(255, 255, 255, 0.08) !important;
-    box-shadow: 0 0 15px rgba(255, 0, 0, 0.15) !important;
-}
-
-.btn-search-glow {
-    background: var(--accent) !important;
-    color: white !important;
-    border: none !important;
-    border-radius: 50px !important;
-    padding: 15px 40px !important;
-    font-weight: 800 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 2px !important;
-    font-size: 0.9rem !important;
-    transition: all 0.3s !important;
-    box-shadow: 0 10px 30px rgba(255, 0, 0, 0.4) !important;
-}
-
-.btn-search-glow:hover {
-    transform: translateY(-3px) scale(1.02) !important;
-    box-shadow: 0 15px 45px rgba(255, 0, 0, 0.6) !important;
-}
-
-/* Buttons & Interactive */
-.btn-primary-custom {
-    background: var(--accent) !important;
-    border: none !important;
-    padding: 14px 35px !important;
-    border-radius: 14px !important;
-    font-weight: 700 !important;
-    color: white !important;
-    text-transform: uppercase !important;
-    letter-spacing: 1px !important;
-    transition: all 0.3s !important;
-    box-shadow: 0 8px 25px rgba(255, 0, 0, 0.25) !important;
-}
-
-.btn-primary-custom:hover {
-    transform: translateY(-4px) !important;
-    background: var(--accent-dark) !important;
-    box-shadow: 0 12px 35px rgba(255, 0, 0, 0.5) !important;
-}
-
-.btn-outline-custom {
-    border: 2px solid rgba(255, 255, 255, 0.2) !important;
-    color: white !important;
-    border-radius: 14px !important;
-    font-weight: 600 !important;
-    transition: all 0.3s !important;
-}
-
-.btn-outline-custom:hover {
-    border-color: var(--accent) !important;
-    background: rgba(255, 0, 0, 0.05) !important;
-}
-
-/* Section Decor */
-.section-title {
-    font-size: 3.2rem;
-    font-weight: 950;
-    margin-bottom: 60px;
-    position: relative;
-    letter-spacing: -2px;
-    text-shadow: 0 0 30px rgba(255, 0, 0, 0.1);
-}
-
-.section-title::after {
-    content: '';
-    position: absolute;
-    bottom: -15px; left: 0;
-    width: 60px; height: 5px;
-    background: var(--accent);
-    border-radius: 3px;
-    box-shadow: 0 0 20px var(--accent);
-}
-
-/* 🏎️ Vehicle Card Buttons & Details - High Contrast Fix */
-.btn-details {
-    background: rgba(255, 0, 0, 0.05) !important;
-    border: 1px solid rgba(255, 0, 0, 0.4) !important;
-    color: #ffffff !important;
-    border-radius: 12px !important;
-    font-weight: 700 !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    font-size: 0.82rem !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
-}
-
-.btn-details:hover {
-    background: var(--accent) !important;
-    border-color: var(--accent) !important;
-    color: white !important;
-    box-shadow: 0 10px 25px rgba(255, 0, 0, 0.5) !important;
-    transform: translateY(-3px) scale(1.02);
-}
-
-/* Mobile Adjustments */
+/* 8. === Media Queries === */
 @media (max-width: 991px) {
     .navbar { width: 100%; top: 0; border-radius: 0; }
     .hero h1 { font-size: 3rem !important; }
-    .btn-search-glow { width: 100%; }
-    .deep-search-card { margin-top: 0; padding: 25px; border-radius: 20px; }
-/* Hero Content Polish */
-.hero {
-    padding-top: 200px !important;
-    padding-bottom: 140px !important;
+    .section-title { font-size: 2.5rem; }
+    .footer { padding-bottom: 110px !important; }
 }
 
-.hero h1 {
-    line-height: 1.1 !important;
-    margin-bottom: 30px;
-}
-
-/* Result Item for Ajax Search */
-.search-results {
-    background: rgba(15, 2, 2, 0.95) !important;
-    border: 1px solid var(--accent) !important;
-    border-radius: 24px;
-    padding: 10px;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9);
-    z-index: 9999;
-    position: absolute;
-    width: 100%;
-}
-}
-
-.search-result-item {
-    border-radius: 16px;
-    margin-bottom: 5px;
-    padding: 10px !important;
-}
-
-.search-result-item:hover {
-    background: rgba(230, 57, 70, 0.15) !important;
-}
-
-/* ⭐ Review Cards (Deep Glass) */
-.review-card {
-    background: rgba(15, 0, 0, 0.7) !important;
-    backdrop-filter: blur(25px) saturate(180%);
-    -webkit-backdrop-filter: blur(25px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 20px !important;
-    padding: 30px !important;
-    transition: all 0.4s ease;
-    color: white !important;
-}
-
-.review-card:hover {
-    border-color: var(--accent) !important;
-    box-shadow: 0 15px 40px rgba(255, 0, 0, 0.2);
-    transform: translateY(-5px);
-}
-
-.review-star {
-    color: var(--accent) !important;
-    font-size: 1.1rem;
-    filter: drop-shadow(0 0 5px var(--accent));
-}
-
-.bi-star-fill, .bi-star {
-    color: var(--accent) !important;
-}
-
-/* 🚁 CTA Section (Need Help?) */
-.cta-help-section {
-    padding: 120px 0;
-    text-align: center;
-}
-
-.cta-help-section h2 {
-    font-size: 3.5rem;
-    font-weight: 900;
-    text-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
-    margin-bottom: 20px;
-}
-
-/* 🏺 Global Footer Enhancements */
-.footer {
-    background: rgba(2, 0, 0, 0.98) !important;
-    border-top: 1px solid rgba(255, 0, 0, 0.2);
-    padding: 80px 0 40px !important;
-}
-
-.footer h5, .footer h4 {
-    color: var(--accent) !important;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 25px;
-    font-size: 1rem;
-}
-
-.footer-links a {
-    color: rgba(255, 255, 255, 0.5) !important;
-    font-weight: 500;
-    margin-bottom: 15px !important;
-}
-
-.footer-links a:hover {
-    color: var(--accent) !important;
-    padding-left: 10px;
-}
-
-.footer-social-btn {
-    width: 45px;
-    height: 45px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 50%;
-    color: white;
-    margin-right: 12px;
-    transition: all 0.3s;
-}
-
-.footer-social-btn:hover {
-    background: var(--accent);
-    transform: scale(1.1);
-    color: white;
-}
-
-/* ?? Stats & Info Graphics Upgrade */
-.stats-number { color: var(--accent) !important; font-size: 4.5rem !important; font-weight: 950 !important; text-shadow: 0 0 25px rgba(255, 0, 0, 0.45); letter-spacing: -2px; }
-
-.info-glass-card { background: rgba(15, 2, 2, 0.4) !important; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; padding: 40px; height: 100%; transition: var(--transition-premium); }
-
-.info-glass-card:hover { background: rgba(15, 2, 2, 0.6) !important; border-color: rgba(255, 0, 0, 0.5) !important; transform: translateY(-8px); }
-
-/* Global Text Visibility Fix */
-.opacity-50, .text-white-50 { opacity: 0.85 !important; color: rgba(255, 255, 255, 0.9) !important; }
-.opacity-75 { opacity: 0.98 !important; }
-.text-muted { color: #e0e0e0 !important; }
+/* ?? Dynamic Brand Marquee Animation */
+.brand-marquee { display: flex; overflow: hidden; user-select: none; gap: 40px; padding: 20px 0; }
+.marquee-group { flex-shrink: 0; display: flex; align-items: center; justify-content: space-around; gap: 50px; min-width: 100%; animation: scrollMarquee 30s linear infinite; }
+.marquee-car { height: 45px; width: auto; filter: grayscale(1) brightness(2); opacity: 0.4; }
+@keyframes scrollMarquee { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+.marquee-group:hover { animation-play-state: paused; }
 

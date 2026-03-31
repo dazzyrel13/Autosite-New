@@ -1,32 +1,37 @@
-<div class="vehicle-card h-100">
+<div class="vehicle-card h-100 shadow-lg">
     <div class="vehicle-image">
         <img src="{{ url_for('static', filename=vehicle.main_image or 'images/no_photo.webp') }}"
-            alt="{{ vehicle.brand }} {{ vehicle.model }}" loading="lazy"
-            style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;">
+            alt="{{ vehicle.brand }} {{ vehicle.model }}" loading="lazy">
         {% if vehicle.status == 'sold' %}
-        <div class="vehicle-badge bg-secondary text-white border border-light">Продано</div>
+        <div class="vehicle-badge" style="background: rgba(100, 100, 100, 0.9); border-color: rgba(255, 255, 255, 0.2);">Продано</div>
         {% elif vehicle.badge %}
         <div class="vehicle-badge">{{ vehicle.badge }}</div>
         {% endif %}
     </div>
     <div class="vehicle-info p-4">
-        <div class="text-white opacity-75 small mb-1 text-uppercase fw-bold" style="letter-spacing: 1px;">
+        <div class="text-accent small mb-1 text-uppercase fw-bold" style="letter-spacing: 2px; font-size: 0.65rem;">
             {{ cat_labels.get(vehicle.category, vehicle.category) }}
         </div>
-        <h3 class="text-white h6 fw-bold mb-2" style="font-size: 1rem;">{{ vehicle.brand }} {{ vehicle.model }}</h3>
-        <div class="d-flex gap-2 mb-3 text-white opacity-75 small">
-            <span><i class="bi bi-calendar-event me-1 text-accent"></i>{{ vehicle.year }}</span>
-            <span><i class="bi bi-speedometer2 me-1 text-accent"></i>{{ "{:,.0f}".format(vehicle.mileage or
-                0).replace(',', ' ') }} км</span>
+        <h3 class="text-white fw-bold mb-3" style="font-size: 1.1rem; min-height: 2.8rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-clamp: 2;">
+            {{ vehicle.brand }} {{ vehicle.model }}
+        </h3>
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex gap-3 text-white opacity-50 small">
+                <span><i class="bi bi-calendar-event me-1"></i>{{ vehicle.year }}</span>
+                <span><i class="bi bi-speedometer2 me-1"></i>{{ "{:,.0f}".format(vehicle.mileage or 0).replace(',', ' ') }} км</span>
+            </div>
         </div>
-        <div class="vehicle-price mb-3 fw-bold" style="font-size: 1.1rem;">
-            {% if vehicle.price %}
-                {{ "{:,.0f}".format(vehicle.price).replace(',', ' ') }} ₽
-            {% else %}
-                Цена по запросу
-            {% endif %}
+
+        <div class="d-flex align-items-center justify-content-between pt-3 border-top border-white border-opacity-10">
+            <div class="vehicle-price m-0 fw-bold text-white">
+                {% if vehicle.price %}
+                    {{ "{:,.0f}".format(vehicle.price).replace(',', ' ') }} ₽
+                {% else %}
+                    <span class="small opacity-50 fw-normal">По запросу</span>
+                {% endif %}
+            </div>
+            <a href="{{ url_for('vehicle_detail', slug=vehicle.slug) }}" class="btn btn-details px-4 py-2 small" style="width: auto !important;">Детали</a>
         </div>
-        <a href="{{ url_for('vehicle_detail', slug=vehicle.slug) }}" class="btn btn-details w-100 py-2 small">Детали <i
-                class="bi bi-arrow-right-short ms-1"></i></a>
     </div>
 </div>
