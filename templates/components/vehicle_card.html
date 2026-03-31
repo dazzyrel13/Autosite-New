@@ -19,14 +19,14 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div class="d-flex gap-3 text-white opacity-50 small">
                 <span><i class="bi bi-calendar-event me-1"></i>{{ vehicle.year }}</span>
-                <span><i class="bi bi-speedometer2 me-1"></i>{{ "{:,.0f}".format(vehicle.mileage or 0).replace(',', ' ') }} км</span>
+                <span><i class="bi bi-speedometer2 me-1"></i>{{ "{:,.0f}".format((vehicle.mileage or 0) | float).replace(',', ' ') }} км</span>
             </div>
         </div>
 
         <div class="d-flex align-items-center justify-content-between pt-3 border-top border-white border-opacity-10">
             <div class="vehicle-price m-0 fw-bold text-white">
                 {% if vehicle.price %}
-                    {{ "{:,.0f}".format(vehicle.price).replace(',', ' ') }} ₽
+                    {{ "{:,.0f}".format(vehicle.price | float).replace(',', ' ') }} ₽
                 {% else %}
                     <span class="small opacity-50 fw-normal">По запросу</span>
                 {% endif %}

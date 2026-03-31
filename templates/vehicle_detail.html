@@ -133,7 +133,7 @@
 
                         <div class="vehicle-detail-price mb-2">
                             {% if vehicle.price %}
-                                {{ "{:,.0f}".format(vehicle.price).replace(',', ' ') }} ₽
+                                {{ "{:,.0f}".format(vehicle.price | float).replace(',', ' ') }} ₽
                             {% else %}
                                 Цена по запросу
                             {% endif %}
