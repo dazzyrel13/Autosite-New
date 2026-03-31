@@ -85,34 +85,112 @@ h1, h2, h3, h4, .navbar-brand {
     top: 25px;
     left: 50%;
     transform: translateX(-50%);
-    width: auto;
-    min-width: 900px;
-    max-width: 95%;
+    width: 95%;
+    max-width: 1300px;
     position: fixed;
     z-index: 1100;
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
 }
 
+.brand-logo {
+    height: 45px;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.brand-logo:hover {
+    transform: scale(1.05);
+}
+
 .navbar.scrolled {
     top: 10px;
     background: rgba(8, 0, 0, 0.9) !important;
-    min-width: 95%;
+    width: 98%;
     border-radius: 20px;
 }
 
 /* Nav Links Styling */
+.navbar-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .nav-link {
     font-weight: 500;
     color: rgba(255, 255, 255, 0.7) !important;
-    padding: 10px 18px !important;
+    padding: 8px 18px !important;
     transition: var(--transition-premium);
-    border-radius: 14px;
-    font-size: 0.9rem;
+    border-radius: 12px;
+    font-size: 0.88rem;
+    white-space: nowrap;
 }
 
-.nav-link:hover {
-    color: #fff !important;
-    background: rgba(255, 255, 255, 0.05);
+/* Search Box Sleek Styling */
+.search-container {
+    position: relative;
+    min-width: 200px;
+    transition: all 0.4s ease;
+}
+
+.search-input {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px !important;
+    color: white !important;
+    font-size: 0.85rem !important;
+    width: 100% !important;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.15) !important;
+    outline: none;
+    min-width: 240px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+    opacity: 0.8;
+}
+
+/* Road Decorative Overlays */
+.fluid-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at top right, rgba(230, 57, 70, 0.05), transparent 60%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+.page-bg-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: 
+        linear-gradient(rgba(10, 1, 1, 0.7), rgba(10, 1, 1, 0.7)),
+        url('images/fon.webp');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    z-index: -2;
+    opacity: 1;
+}
+
+.navbar-brand .brand-text {
+    font-size: 1.1rem;
+    color: white;
+    margin-left: 10px;
+}
+
+.navbar-brand span {
+    color: var(--accent);
 }
 
 .nav-link.active {
