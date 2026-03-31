@@ -235,8 +235,7 @@
         <div class="row g-4">
             {% for review in reviews %}
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
-                <div class="card glass h-100 rounded-5 p-4 p-md-5"
-                    style="transition: transform 0.3s; box-shadow: var(--card_shadow);">
+                <div class="review-card h-100 rounded-5 p-4 p-md-5">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <div class="d-flex align-items-center">
                             <div class="bg-accent bg-opacity-10 text-accent rounded-circle d-flex align-items-center justify-content-center me-3"
@@ -253,7 +252,7 @@
 
                     <div class="d-flex mb-3">
                         {% for _ in range(review.rating) %}
-                        <i class="bi bi-star-fill text-warning me-1" style="font-size: 0.9rem;"></i>
+                        <i class="bi bi-star-fill text-accent me-1" style="font-size: 0.9rem;"></i>
                         {% endfor %}
                         {% for _ in range(5 - review.rating) %}
                         <i class="bi bi-star text-white opacity-25 me-1" style="font-size: 0.9rem;"></i>
@@ -295,13 +294,14 @@
 </section>
 
 <!-- Callback CTA -->
-<section class="py-5">
+<section class="cta-help-section">
     <div class="container" data-aos="flip-up">
-        <div class="glass rounded-5 p-5 text-white text-center shadow-lg" data-aos="zoom-in">
-            <h2 class="display-5 fw-bold mb-4">Нужна помощь в подборе?</h2>
+        <div class="review-card rounded-5 p-5 text-white text-center shadow-lg" data-aos="zoom-in">
+            <h2 class="display-4 fw-bold mb-4">Нужна помощь в подборе?</h2>
             <p class="lead mb-5 opacity-75">Наши эксперты помогут найти идеальный вариант под ваш бюджет и задачи.</p>
-            <a href="{{ url_for('contact') }}" class="btn btn-light btn-lg px-5 py-3 rounded-pill fw-bold"
-                style="color: var(--primary);">Обсудить задачу</a>
+            <div class="d-flex justify-content-center">
+                <a href="{{ url_for('contact') }}" class="btn-primary-custom px-5 py-3 text-decoration-none">Обсудить задачу</a>
+            </div>
         </div>
     </div>
 </section>

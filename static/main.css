@@ -503,23 +503,89 @@ h1, h2, h3, h4, .navbar-brand {
     background: rgba(230, 57, 70, 0.15) !important;
 }
 
-/* Utility Animations */
-[data-aos] {
-    transition-duration: 800ms !important;
+/* ⭐ Review Cards (Deep Glass) */
+.review-card {
+    background: rgba(15, 0, 0, 0.7) !important;
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 20px !important;
+    padding: 30px !important;
+    transition: all 0.4s ease;
+    color: white !important;
 }
 
-.opacity-75 {
-    opacity: 0.9 !important;
+.review-card:hover {
+    border-color: var(--accent) !important;
+    box-shadow: 0 15px 40px rgba(255, 0, 0, 0.2);
+    transform: translateY(-5px);
 }
 
-.opacity-50 {
-    opacity: 0.75 !important;
+.review-star {
+    color: var(--accent) !important;
+    font-size: 1.1rem;
+    filter: drop-shadow(0 0 5px var(--accent));
 }
 
-.opacity-25 {
-    opacity: 0.45 !important;
+.bi-star-fill, .bi-star {
+    color: var(--accent) !important;
 }
 
-.text-muted {
-    color: var(--text-muted) !important;
+/* 🚁 CTA Section (Need Help?) */
+.cta-help-section {
+    padding: 120px 0;
+    text-align: center;
+}
+
+.cta-help-section h2 {
+    font-size: 3.5rem;
+    font-weight: 900;
+    text-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+    margin-bottom: 20px;
+}
+
+/* 🏺 Global Footer Enhancements */
+.footer {
+    background: rgba(2, 0, 0, 0.98) !important;
+    border-top: 1px solid rgba(255, 0, 0, 0.2);
+    padding: 80px 0 40px !important;
+}
+
+.footer h5, .footer h4 {
+    color: var(--accent) !important;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 25px;
+    font-size: 1rem;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.5) !important;
+    font-weight: 500;
+    margin-bottom: 15px !important;
+}
+
+.footer-links a:hover {
+    color: var(--accent) !important;
+    padding-left: 10px;
+}
+
+.footer-social-btn {
+    width: 45px;
+    height: 45px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    color: white;
+    margin-right: 12px;
+    transition: all 0.3s;
+}
+
+.footer-social-btn:hover {
+    background: var(--accent);
+    transform: scale(1.1);
+    color: white;
 }
