@@ -78,6 +78,10 @@ def create_app(config_class=Config):
         response.headers['Content-Security-Policy'] = "default-src 'self'; worker-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://unpkg.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; img-src 'self' data: https://ingest.de.sentry.io; connect-src 'self' https://ingest.de.sentry.io https://cdn.jsdelivr.net https://unpkg.com https://fonts.googleapis.com https://fonts.gstatic.com;"
         return response
 
+    # 🧵 Пул потоков для легких фоновых задач (чтобы не плодить тысячи тредов)
+    from concurrent.futures import ThreadPoolExecutor
+    executor = ThreadPoolExecutor(max_workers=4)
+
     # 📊 Регистрация посещений (Трафик)
     @app.before_request
     def record_visit():
@@ -97,8 +101,6 @@ def create_app(config_class=Config):
 
         try:
             import hashlib
-            from threading import Thread
-            
             ip = request.headers.get('X-Forwarded-For', request.remote_addr)
             if ip and ',' in ip:
                 ip = ip.split(',')[0].strip()
@@ -108,7 +110,7 @@ def create_app(config_class=Config):
             user_agent = request.user_agent.string[:512] if request.user_agent.string else None
             referrer = request.referrer[:512] if request.referrer else None
             
-            # Асинхронное сохранение визита, чтобы не тормозить загрузку страницы (не блокировать БД)
+            # Асинхронное сохранение визита через executor
             def save_visit_async(app_context, h_ip, h_path, h_ua, h_ref):
                 try:
                     with app_context:
@@ -118,14 +120,11 @@ def create_app(config_class=Config):
                         db.session.add(visit)
                         db.session.commit()
                 except Exception:
-                    # Ignore DB locks or rollback issues in background metrics
-                    pass
+                    pass # Трафик не критичен
             
-            # Start background thread with app context
-            app_ctx = app.app_context()
-            Thread(target=save_visit_async, args=(app_ctx, ip_hash, path, user_agent, referrer)).start()
+            executor.submit(save_visit_async, app.app_context(), ip_hash, path, user_agent, referrer)
         except Exception:
-            pass # Трафик не критичен, не блокируем запрос
+            pass
 
     # Precompute labels once globally
     SHORT_LABELS = {k: v.replace('Все ', '').replace('автомобили', '').strip() for k, v in CAT_TITLES.items()}
@@ -169,45 +168,39 @@ def create_app(config_class=Config):
         os.makedirs(app.instance_path, exist_ok=True)
         db.create_all()
 
-        # 🚀 Internal Migration: SQLite (site.db) -> Postgres
+        # 🚀 Умная миграция: SQLite (site.db) -> Postgres (Только при первом запуске)
         def migrate_internal(app_context):
             with app_context:
                 try:
                     from models import Vehicle
                     from flask import current_app
-                    # 🛠️ Step 0: Sync Sequences regardless of migration status
-                    # This fixes 'Duplicate Key' errors if data was already in the DB but counters were wrong.
-                    tables = ['vehicle', 'article', 'lead', 'review', 'inspection_report']
-                    from sqlalchemy import text
                     from extensions import db as _db
+                    from sqlalchemy import text
+                    
+                    # 🛠️ Шаг 1: Синхронизируем сиквенсы (лечит ошибки Duplicate Key)
+                    tables = ['vehicle', 'article', 'lead', 'review', 'inspection_report']
                     for table in tables:
                         try:
-                            _db.session.execute(text(f"SELECT setval('{table}_id_seq', COALESCE((SELECT MAX(id) FROM {table}), 0), true)"))
+                            # Postgres Only: Sync setval for ID counter
+                            _db.session.execute(text(f"SELECT setval('{table}_id_seq', COALESCE((SELECT MAX(id) FROM {table}), 0) + 1, false)"))
                             _db.session.commit()
-                        except Exception as seq_err:
+                        except Exception:
                             _db.session.rollback()
-                            current_app.logger.warning(f"Seq sync failed for {table}: {seq_err}")
 
-                    # Check if Postgres already has data
+                    # Проверяем, пуста ли база
                     try:
-                        first_vehicle = Vehicle.query.first()
-                        if first_vehicle:
-                            current_app.logger.info("Internal Migration: Data exists. Sequences synced, migration skipped.")
-                            return # Already migrated
-                    except Exception as e:
-                        current_app.logger.error(f"Internal Migration check failed (maybe DB empty/error): {e}")
+                        if Vehicle.query.first():
+                            return # Данные уже есть, ничего не делаем
+                    except Exception:
+                        pass
                     
                     sqlite_path = os.path.join(current_app.root_path, 'site.db')
                     if not os.path.exists(sqlite_path):
-                        current_app.logger.warning(f"Internal Migration: site.db not found at {sqlite_path}")
-                        return # No source file to migrate
+                        return
                     
                     import sqlite3
                     conn = sqlite3.connect(sqlite_path)
                     cursor = conn.cursor()
-                    
-                    tables = ['vehicle', 'article', 'lead', 'review', 'inspection_report']
-                    current_app.logger.info(f"Internal Migration: Starting migration for tables: {tables}")
                     
                     for table_name in tables:
                         try:
@@ -216,56 +209,37 @@ def create_app(config_class=Config):
                             if not rows: continue
                             
                             cols = [description[0] for description in cursor.description]
-                            current_app.logger.info(f"Internal Migration: Migrating {len(rows)} rows from {table_name}")
-                            
                             for row in rows:
                                 data = dict(zip(cols, row))
-                                
-                                # 🛠️ Fix types for Postgres
+                                # Исправляем типы для PG
                                 for k, v in data.items():
-                                    # 1. Convert 0/1 to True/False for Boolean fields (PG requirement)
                                     if k in ['is_currency_fixed', 'is_published']:
                                         if v is not None: data[k] = bool(v)
-                                    # 2. JSON fields (images, specifications): 
-                                    # SQLite provides strings. If we convert them to list/dict, psycopg2 
-                                    # tries to insert as text[] (Postgres Array), failing the JSON match.
-                                    # We keep them as strings; Postgres/Alchemy will handle the JSON parse.
                                 
-                                from extensions import db as _db
-                                from sqlalchemy import text
                                 p_holders = ", ".join([f":{k}" for k in data.keys()])
                                 col_names = ", ".join(data.keys())
-                                _db.session.execute(text(f"INSERT INTO {table_name} ({col_names}) VALUES ({p_holders}) ON CONFLICT DO NOTHING"), data)
+                                # Используем ON CONFLICT, чтобы не падать при повторном деплое
+                                _db.session.execute(text(f"INSERT INTO {table_name} ({col_names}) VALUES ({p_holders}) ON CONFLICT (id) DO NOTHING"), data)
                             _db.session.commit()
-                            current_app.logger.info(f"Internal Migration: {table_name} success!")
                         except Exception as table_err:
-                            from extensions import db as _db
-                            _db.session.rollback() # Clear failed transaction in Postgres
-                            current_app.logger.error(f"Internal Migration: {table_name} failed: {table_err}")
+                            _db.session.rollback()
+                            current_app.logger.warning(f"Миграция таблицы {table_name} пропущена: {table_err}")
                     conn.close()
                     
-                    # 🛠️ Fix Postgres ID Sequences (prevents 'Key already exists' error after migration)
-                    from sqlalchemy import text
+                    # Финальная синхронизация счетчиков
                     for table in tables:
                         try:
-                            _db.session.execute(text(f"SELECT setval('{table}_id_seq', COALESCE((SELECT MAX(id) FROM {table}), 1))"))
+                            _db.session.execute(text(f"SELECT setval('{table}_id_seq', (SELECT MAX(id) FROM {table}))"))
                             _db.session.commit()
-                        except Exception as seq_err:
+                        except:
                             _db.session.rollback()
-                            current_app.logger.warning(f"Could not sync sequence for {table}: {seq_err}")
                             
-                    current_app.logger.info("Internal Migration: Migration complete.")
-                    from extensions import cache as _cache
-                    _cache.clear()
+                    current_app.logger.info("Внутренняя миграция завершена.")
                 except Exception as e:
-                    try:
-                        current_app.logger.critical(f"Internal Migration error: {e}")
-                    except:
-                        print(f"Migration CRITICAL error (no context): {e}")
+                    current_app.logger.error(f"Ошибка миграции: {e}")
 
-        # Start background migration with proper app context
-        from threading import Thread
-        Thread(target=migrate_internal, args=(app.app_context(),)).start()
+        # Запускаем миграцию один раз через executor
+        executor.submit(migrate_internal, app.app_context())
 
 
         from routes.main import register_routes
@@ -291,6 +265,7 @@ def create_app(config_class=Config):
 
         # ⏰ Надежный запуск планировщика для хостинга
         from services.currency import fetch_yuan_rate
+        from services.maintenance import cleanup_old_visits
         fetch_yuan_rate() # Первичный запуск курса при старте
         
         if not scheduler.running:

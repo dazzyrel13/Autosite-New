@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # Основной сервис приложения Flask
+  # 🚗 Основной сервис приложения (Gunicorn + Flask)
   web:
     build: .
     container_name: turbo_dv_web
@@ -12,19 +12,55 @@ services:
       - .:/app
     environment:
       - FLASK_APP=app.py
-      - FLASK_ENV=development
-      - DATABASE_URL=sqlite:///./instance/database.db
+      - FLASK_ENV=production
+      - DATABASE_URL=postgresql://user:password@db:5432/autosite
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=${SECRET_KEY:-your_fallback_secret}
     depends_on:
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - turbo_net
 
-  # Сервис Redis для кэширования (Flask-Caching)
+  # 🐘 База данных PostgreSQL (Надежная работа с данными)
+  db:
+    image: postgres:15-alpine
+    container_name: turbo_dv_db
+    restart: always
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=autosite
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d autosite"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - turbo_net
+
+  # ⚡ Redis для кэширования и синхронизации курсов валют
   redis:
     image: redis:7-alpine
     container_name: turbo_dv_redis
     restart: always
-    ports:
-      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - turbo_net
 
-# Общие тома данных (если понадобятся для БД отдельно)
+# Локальные хранилища данных
 volumes:
-  sqlite_data:
+  postgres_data:
+
+# Изолированная внутренняя сеть
+networks:
+  turbo_net:
+    driver: bridge

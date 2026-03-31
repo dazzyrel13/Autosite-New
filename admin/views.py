@@ -343,8 +343,13 @@ class SafeModelView(ModelView):
 
 class VehicleAdminView(SafeModelView):
     def _toggle_formatter(view, context, model, name):
-        """Render a raw checkbox that toggles via AJAX without popovers."""
+        """Рендерит чекбокс, который переключается через AJAX."""
+        from flask_wtf.csrf import generate_csrf
         checked = 'checked' if model.is_currency_fixed else ''
+        # Генерируем базовый URL в Python, а ID и состояние подставим в JS
+        base_url = url_for('vehicle.toggle_fixed_api', id=0, state=0)
+        csrf_token = generate_csrf()
+        
         return Markup(f'''
             <div class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" {checked} 
@@ -355,11 +360,15 @@ class VehicleAdminView(SafeModelView):
             if (typeof toggleFixed === "undefined") {{
                 window.toggleFixed = function(id, state) {{
                     const val = state ? 1 : 0;
-                    fetch(`{{ url_for('vehicle.toggle_fixed_api', id=0, state=0) }}`.replace('0/0', id + '/' + val), {{
+                    const url = "{base_url}".replace('0/0', id + '/' + val);
+                    fetch(url, {{
                         method: 'POST',
-                        headers: {{ 'X-CSRFToken': '{{ csrf_token() }}' }}
+                        headers: {{ 
+                            'X-CSRFToken': '{csrf_token}',
+                            'Content-Type': 'application/json' 
+                        }}
                     }}).then(res => res.json())
-                       .then(data => {{ if(!data.success) alert('Ошибка сохранения'); }});
+                       .then(data => {{ if(!data.success) alert('Ошибка сохранения: ' + (data.error || 'неизвестно')); }});
                 }}
             }}
             </script>
@@ -452,27 +461,20 @@ class VehicleAdminView(SafeModelView):
             model.main_image = ""
 
     def on_model_delete(self, model):
-        """Clear cache and cleanup images on disk when vehicle is deleted."""
+        """Полная очистка кэша и диска при удалении автомобиля."""
         from extensions import cache
+        import shutil
         cache.clear()
 
-        if getattr(model, 'images', None):
-            for image_path in model.images:
-                try:
-                    full_path = os.path.join(current_app.root_path, 'static', image_path)
-                    if os.path.exists(full_path):
-                        os.remove(full_path)
-                except Exception as e:
-                    logger.error(f"Ошибка удаления файла: {e}")
-            
+        # Путь к папке с изображениями авто: static/images/<slug>
+        if model.slug:
             try:
-                # Remove empty folder
-                if model.images:
-                    dir_path = os.path.dirname(os.path.join(current_app.root_path, 'static', model.images[0]))
-                    if os.path.exists(dir_path) and not os.listdir(dir_path):
-                        os.rmdir(dir_path)
+                target_dir = os.path.join(current_app.root_path, 'static', 'images', model.slug)
+                if os.path.exists(target_dir):
+                    shutil.rmtree(target_dir)
+                    logger.info(f"Папка с фото авто {model.slug} успешно удалена.")
             except Exception as e:
-                logger.error(f"Ошибка удаления папки: {e}")
+                logger.error(f"Ошибка удаления папки авто {model.slug}: {e}")
 
 class LeadAdminView(SafeModelView):
     can_create = False
@@ -522,6 +524,19 @@ class ArticleAdminView(SafeModelView):
             img.thumbnail((1200, 800), Image.LANCZOS)
             img.save(file_path, 'WEBP', quality=85)
             model.main_image = f"images/{folder_name}/{filename}"
+
+    def on_model_delete(self, model):
+        """Удаляем фото статьи при её удалении."""
+        from extensions import cache
+        cache.clear()
+        if model.main_image:
+            try:
+                full_path = os.path.join(current_app.root_path, 'static', model.main_image)
+                if os.path.exists(full_path):
+                    os.remove(full_path)
+                    logger.info(f"Фото статьи {model.title} удалено.")
+            except Exception as e:
+                logger.error(f"Ошибка удаления фото статьи: {e}")
 
 class ReviewAdminView(SafeModelView):
     can_edit = True

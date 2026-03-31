@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /search_ajax/
+Disallow: /static/vendor/
+Disallow: /static/js/
+Allow: /static/main.css
+Allow: /static/images/
+
+Sitemap: /sitemap.xml

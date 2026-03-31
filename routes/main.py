@@ -497,15 +497,15 @@ def register_routes(app):
             
         pages = list(pages_set)
         
-        # Vehicle pages (Only slugs, to keep sitemap light)
-        vehicles = Vehicle.query.options(load_only(Vehicle.slug)).all()
+        # Vehicle pages (Only slugs, very efficient query)
+        vehicles = db.session.query(Vehicle.slug).all()
         for v in vehicles:
-            pages.append(url_for('vehicle_detail', slug=v.slug, _external=True))
+            pages.append(url_for('vehicle_detail', slug=v[0], _external=True))
         
         # Article pages
-        articles = Article.query.options(load_only(Article.slug)).all()
+        articles = db.session.query(Article.slug).all()
         for a in articles:
-            pages.append(url_for('article_detail', slug=a.slug, _external=True))
+            pages.append(url_for('article_detail', slug=a[0], _external=True))
             
         sitemap_xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         for page in pages:

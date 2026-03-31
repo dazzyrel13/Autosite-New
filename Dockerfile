@@ -39,6 +39,6 @@ COPY . .
 # Expose the Flask port
 EXPOSE 5000
 
-# Start command
-CMD ["python", "app.py"]
+# Start command (Gunicorn: 4 workers for better concurrency)
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "--threads", "2", "--timeout", "60", "app:app"]
 
