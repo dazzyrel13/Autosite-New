@@ -71,65 +71,59 @@ h1, h2, h3, h4, .navbar-brand {
     background: var(--accent-dark);
 }
 
-/* Navbar: Floating & Sleek */
+/* Navbar: Floating & Sleek - Final Scaling Fix */
 .navbar {
-    background: rgba(10, 1, 1, 0.6) !important;
+    background: rgba(10, 1, 1, 0.9) !important;
     backdrop-filter: blur(25px) saturate(200%);
     -webkit-backdrop-filter: blur(25px) saturate(200%);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    border-bottom: 1px solid var(--glass-highlight);
+    border-bottom: 2px solid var(--glass-highlight);
     border-radius: 24px;
-    padding: 12px 25px !important;
+    padding: 10px 30px !important;
     transition: var(--transition-premium);
-    top: 25px;
+    top: 20px;
     left: 50%;
     transform: translateX(-50%);
     width: 95%;
-    max-width: 1300px;
+    max-width: 1450px;
     position: fixed;
     z-index: 1100;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.1);
 }
 
 .brand-logo {
-    height: 45px;
+    height: 42px;
     width: auto;
     object-fit: contain;
     transition: transform 0.3s ease;
 }
 
-.brand-logo:hover {
-    transform: scale(1.05);
-}
-
-.navbar.scrolled {
-    top: 10px;
-    background: rgba(8, 0, 0, 0.9) !important;
-    width: 98%;
-    border-radius: 20px;
-}
-
-/* Nav Links Styling */
+/* Nav Links Scaling */
 .navbar-nav {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px; /* Tighter gap to prevent overflow */
 }
 
 .nav-link {
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.7) !important;
-    padding: 8px 18px !important;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8) !important;
+    padding: 8px 14px !important;
     transition: var(--transition-premium);
     border-radius: 12px;
-    font-size: 0.88rem;
+    font-size: 0.84rem;
     white-space: nowrap;
 }
 
-/* Search Box Sleek Styling */
+.nav-link:hover {
+    color: var(--accent) !important;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* Compact Search Box */
 .search-container {
     position: relative;
-    min-width: 200px;
+    min-width: 150px; /* Reduced initial width */
     transition: all 0.4s ease;
 }
 
