@@ -174,13 +174,47 @@ h1, h2, h3, h4, .navbar-brand {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     background-image: 
-        linear-gradient(rgba(10, 1, 1, 0.7), rgba(10, 1, 1, 0.7)),
+        linear-gradient(rgba(10, 1, 1, 0.45), rgba(10, 1, 1, 0.45)),
         url('images/fon.webp');
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
     z-index: -2;
     opacity: 1;
+}
+
+/* 🏎️ Brand Marquee & Dragon Truck Fix */
+.brand-marquee {
+    display: flex;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 10px 0;
+}
+
+.marquee-group {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+    padding-right: 60px;
+    animation: marquee 40s linear infinite;
+}
+
+@keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
+}
+
+.marquee-car {
+    height: 120px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 15px rgba(230, 57, 70, 0.3));
+    margin: 0 40px;
+}
+
+.marquee-group span {
+    font-size: 1.5rem;
+    font-weight: 800;
 }
 
 .navbar-brand .brand-text {
@@ -223,6 +257,43 @@ h1, h2, h3, h4, .navbar-brand {
     transform: translateY(-12px) scale(1.02);
     border-color: rgba(230, 57, 70, 0.4);
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(230, 57, 70, 0.1);
+}
+
+/* Hero Section Evolution */
+.hero {
+    overflow: hidden;
+    position: relative;
+    background: #000;
+}
+
+.hero-bg-image {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-size: cover;
+    background-position: center;
+    transform: scale(1.1);
+    opacity: 0.6;
+    z-index: 1;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(90deg, #0a0101 20%, transparent 60%);
+    z-index: 2;
+}
+
+.hero .container {
+    z-index: 10;
+}
+
+.hero h1 {
+    font-size: 4.5rem !important;
+    text-shadow: 0 0 30px rgba(255, 0, 21, 0.2);
+}
+
+@media (max-width: 768px) {
+    .hero h1 { font-size: 2.8rem !important; }
 }
 
 .vehicle-image {
