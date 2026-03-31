@@ -473,7 +473,7 @@
                 // Show banner after 30 seconds wait
                 if (!localStorage.getItem('pwa_banner_closed')) {
                     setTimeout(() => {
-                        pwaBanner.style.display = 'block';
+                        pwaBanner.classList.remove('banner-hidden');
                     }, 30000); 
                 }
             });

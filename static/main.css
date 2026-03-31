@@ -91,3 +91,25 @@ h1, h2, h3, h4, .navbar-brand { font-family: 'Sora', sans-serif; font-weight: 80
 @keyframes scrollMarquee { from { transform: translateX(0); } to { transform: translateX(-100%); } }
 .marquee-group:hover { animation-play-state: paused; }
 
+
+/* ??? Navbar & Branding Fixes */
+.brand-logo { height: 42px; width: auto; transition: var(--transition-premium); }
+.brand-text { font-family: Sora, sans-serif; font-weight: 800; font-size: 1.4rem; color: #fff; letter-spacing: -1px; margin-left: 10px; }
+.brand-text span { color: var(--accent); }
+.search-container { position: relative; max-width: 300px; flex-grow: 1; transition: var(--transition-premium); }
+.search-input { background: rgba(255, 255, 255, 0.05) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; border-radius: 12px; color: #fff !important; width: 100%; transition: var(--transition-premium); }
+.search-input:focus { background: rgba(255, 255, 255, 0.1) !important; border-color: var(--accent) !important; box-shadow: 0 0 15px var(--accent-glow) !important; }
+.search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--accent); z-index: 5; }
+
+
+/* ?? Vehicle Cards & Gallery Styles */
+.vehicle-image { position: relative; aspect-ratio: 16 / 10; overflow: hidden; }
+.vehicle-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); }
+.vehicle-card:hover .vehicle-image img { transform: scale(1.1); }
+.vehicle-badge { position: absolute; top: 15px; right: 15px; background: var(--accent); color: white; padding: 6px 15px; border-radius: 10px; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; box-shadow: 0 10px 20px var(--accent-glow); border: 1px solid rgba(255, 255, 255, 0.2); z-index: 5; }
+.vehicle-info { background: #0d0d0d; }
+.btn-details { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white; border-radius: 12px; font-weight: 700; transition: var(--transition-premium); text-decoration: none; }
+.btn-details:hover { background: var(--accent); border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 10px 20px var(--accent-glow); color: white !important; }
+.vehicle-detail-price { font-size: 2.2rem; font-weight: 900; color: #fff; letter-spacing: -1px; }
+.vehicle-gallery-img { aspect-ratio: 16 / 9; object-fit: cover; }
+
