@@ -444,23 +444,25 @@ h1, h2, h3, h4, .navbar-brand {
     box-shadow: 0 0 20px var(--accent);
 }
 
-/* 🏎️ Vehicle Card Buttons & Details */
+/* 🏎️ Vehicle Card Buttons & Details - High Contrast Fix */
 .btn-details {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    color: rgba(255, 255, 255, 0.6) !important;
-    border-radius: 10px !important;
-    font-weight: 600 !important;
-    transition: all 0.3s ease !important;
-    font-size: 0.85rem !important;
+    background: rgba(255, 0, 0, 0.05) !important;
+    border: 1px solid rgba(255, 0, 0, 0.4) !important;
+    color: #ffffff !important;
+    border-radius: 12px !important;
+    font-weight: 700 !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    font-size: 0.82rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
 }
 
 .btn-details:hover {
     background: var(--accent) !important;
     border-color: var(--accent) !important;
     color: white !important;
-    box-shadow: 0 10px 20px rgba(255, 0, 0, 0.3) !important;
-    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(255, 0, 0, 0.5) !important;
+    transform: translateY(-3px) scale(1.02);
 }
 
 /* Mobile Adjustments */
